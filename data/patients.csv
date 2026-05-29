@@ -1,0 +1,4 @@
+patient_id,name,age,gender,condition_focus,primary_doctor
+pat-001,Raman Mehta,68,male,diabetes follow-up,Dr. Asha Iyer
+pat-002,Leela Shah,61,female,hypertension review,Dr. Vikram Sethi
+pat-003,Dev Kapoor,73,male,post-discharge medication reconciliation,Dr. Nisha Rao

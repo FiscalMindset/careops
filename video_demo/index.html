@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareOps Agent - Video Demo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 1px solid #d9e1e8;
+      background-color: #f8fafc;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      letter-spacing: -0.02em;
+    }
+    p.subtitle {
+      color: #2563eb;
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      padding: 3rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .video-container {
+      width: 100%;
+      max-width: 900px;
+      aspect-ratio: 16 / 9;
+      background-color: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .placeholder-text {
+      color: #fff;
+      font-size: 1.2rem;
+      opacity: 0.7;
+    }
+    /* Embed your actual iframe or video tag here */
+    .video-container iframe, .video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .instructions {
+      margin-top: 2rem;
+      max-width: 600px;
+      text-align: center;
+      color: #64748b;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CareOps Agent Demo</h1>
+    <p class="subtitle">Coral Hackathon Track 2</p>
+  </header>
+  <main>
+    <div class="video-container">
+      <div class="placeholder-text">Replace this div with your video iframe/link</div>
+      <!-- Example: <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe> -->
+    </div>
+    <div class="instructions">
+      <p>This is the official video demonstration of the CareOps Agent running with real data flows via the Coral MCP abstraction layer.</p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,6 @@
+patient_id,date,medicine,quantity,amount,pharmacy,receipt_file
+pat-001,2026-03-16,Sitagliptin 50 mg,30 tablets,680.00,GreenCross Pharmacy,/demo/receipts/sitagliptin-mar.jpg
+pat-001,2026-04-16,Sitagliptin 50 mg,30 tablets,680.00,GreenCross Pharmacy,/demo/receipts/sitagliptin-apr.jpg
+pat-001,2026-05-01,Metformin 500 mg,60 tablets,145.00,GreenCross Pharmacy,/demo/receipts/metformin-may.jpg
+pat-002,2026-04-09,Amlodipine 5 mg,30 tablets,92.00,HealthHub Pharmacy,/demo/receipts/amlodipine-apr.jpg
+pat-003,2026-04-02,Pantoprazole 40 mg,21 tablets,180.00,Metro Pharmacy,/demo/receipts/pantoprazole-apr.jpg

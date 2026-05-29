@@ -1,0 +1,6 @@
+patient_id,date,doctor,message,instruction_type,medicine_mentioned,followup_date
+pat-001,2026-03-15,Dr. Asha Iyer,"Added Sitagliptin 50 mg once daily. Continue Metformin. Bring glucose logs and repeat HbA1c before next visit.",medicine_change,Sitagliptin,2026-05-31
+pat-001,2026-04-28,Dr. Asha Iyer,"If dizziness or unusual fatigue is logged, note timing and discuss during follow-up. Do not change medicines without review.",safety_instruction,,2026-05-31
+pat-001,2026-05-12,Dr. Asha Iyer,"Please bring latest lab report and pharmacy refill receipts to the diabetes follow-up.",visit_preparation,,2026-05-31
+pat-002,2026-04-08,Dr. Vikram Sethi,"Track home BP readings for two weeks before review.",monitoring,,2026-06-10
+pat-003,2026-04-10,Dr. Nisha Rao,"Bring discharge papers and current medicine strips for reconciliation.",visit_preparation,,2026-05-20

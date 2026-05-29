@@ -1,0 +1,6 @@
+patient_id,date,symptom,severity,notes,related_medicine
+pat-001,2026-03-18,Mild nausea,2,Logged three days after Sitagliptin was added. Resolved by evening.,Sitagliptin
+pat-001,2026-04-02,Dizziness,3,Occurred before lunch; family noted missed breakfast.,Sitagliptin
+pat-001,2026-05-09,Fatigue,2,Afternoon tiredness after lab day.,Metformin
+pat-002,2026-04-17,Headache,2,Evening headache after long commute.,Amlodipine
+pat-003,2026-04-13,Stomach discomfort,3,Discuss at reconciliation visit.,Pantoprazole

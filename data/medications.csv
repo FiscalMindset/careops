@@ -1,0 +1,6 @@
+patient_id,medicine_name,dose,frequency,start_date,end_date,source,notes
+pat-001,Metformin,500 mg,twice daily,2025-12-10,,synthetic_patient_record,Continue with meals as instructed.
+pat-001,Sitagliptin,50 mg,once daily,2026-03-15,,prescription_ocr,Added at last diabetes follow-up.
+pat-001,Atorvastatin,10 mg,nightly,2025-08-20,,synthetic_patient_record,Listed in synthetic medication record.
+pat-002,Amlodipine,5 mg,once daily,2026-01-08,,doctor_chat,For blood pressure follow-up.
+pat-003,Pantoprazole,40 mg,once daily,2026-04-01,2026-04-21,discharge_summary,Short post-discharge course.

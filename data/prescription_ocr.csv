@@ -1,0 +1,4 @@
+patient_id,image_file,ocr_text,extracted_medicines,doctor_name,prescription_date
+pat-001,/demo/prescriptions/pat-001-mar15.jpg,"Rx: Metformin 500 mg BD after meals. Add Sitagliptin 50 mg OD. Repeat HbA1c in 8-10 weeks.","Metformin 500 mg; Sitagliptin 50 mg",Dr. Asha Iyer,2026-03-15
+pat-002,/demo/prescriptions/pat-002-apr08.jpg,"Amlodipine 5 mg OD. Maintain BP log.","Amlodipine 5 mg",Dr. Vikram Sethi,2026-04-08
+pat-003,/demo/prescriptions/pat-003-apr01.jpg,"Pantoprazole 40 mg OD for 21 days.","Pantoprazole 40 mg",Dr. Nisha Rao,2026-04-01
