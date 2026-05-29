@@ -1,204 +1,307 @@
-# CareOps Custom Source Specs
+# CareOps Coral Source Specs
 
-This document defines the 9 custom Coral source specs registered with the real Coral CLI for the CareOps Agent.
+This document describes every Coral source spec in the CareOps project. Each spec is a `manifest.yaml` file that tells Coral how to load, query, and validate a data source.
 
-## Overview
+## Spec Anatomy
 
-All 9 specs use **real Coral manifests** with `backend: jsonl`, pointing at JSONL files in the `data/` directory. They are registered with `coral source add --file` and queryable via `coral sql --format json`.
+Every CareOps spec follows this structure:
 
-**Registration status**: ✅ All 9 registered, all 18 declared test queries pass.
+```yaml
+name: careops_<source>      # Unique source name, used in SQL as source.table
+version: 0.1.0               # Spec version
+dsl_version: 3               # Coral DSL version
+backend: jsonl               # Data backend (Coral v0.2.0 supports jsonl, not file)
+description: ...             # Human-readable description
+inputs:
+  DATA_PATH:                 # Template variable for data directory
+    kind: variable
+    default: /path/to/data
+test_queries:                # Queries run during coral source test
+  - SELECT ... LIMIT 3
+  - SELECT COUNT(*) ...
+tables:
+  - name: <table_name>       # Table name, used in SQL as source.table
+    description: ...
+    source:
+      location: "file:///path/to/data/"
+      glob: "<name>.jsonl"   # Glob pattern matching the data file
+    columns:
+      - name: <column_name>
+        type: Utf8 | Int64   # Column type
+        description: ...
+```
 
-**Convention**: Each spec `careops_{name}` exposes a table `careops_{name}.{name}` (e.g. `careops_patients.patients`, `careops_medications.medications`).
+## Important Coral CLI v0.2.0 Notes
 
----
+- `backend: file` is **not supported** — use `backend: jsonl` instead
+- `format` property in table definitions causes errors with `jsonl` — omit it
+- Template variables like `{{input.DATA_PATH}}` are **not resolved** when using `coral source add --file` — hardcode absolute paths
+- Queries must use `source.table` syntax without quotes (e.g. `careops_patients.patients`)
+- Each spec should have at least 2 test queries for `coral source test` to pass
 
-## 1. `careops_patients`
+## Specs
 
-Patient demographic and summary records.
+### 1. careops_patients
 
-**Table**: `careops_patients.patients`
+**Purpose:** Patient demographics and medical focus records. This is the central table that all other sources join against.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `patient_id` | Utf8 | Unique patient identifier |
-| `name` | Utf8 | Patient full name |
-| `age` | Int64 | Patient age in years |
-| `gender` | Utf8 | Patient gender |
-| `condition_focus` | Utf8 | Primary condition for the current care focus |
-| `primary_doctor` | Utf8 | Primary care physician name |
-
-**Example query**: `SELECT * FROM careops_patients.patients WHERE patient_id = 'pat-001';`
-
-**Test queries**: 2/2 pass (SELECT + COUNT)
-
----
-
-## 2. `careops_medications`
-
-Current and historical medication records with dosage schedules.
-
-**Table**: `careops_medications.medications`
-
-| Column | Type | Description |
-|--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `medicine_name` | Utf8 | Generic or brand medicine name |
-| `dose` | Utf8 | Dosage strength (e.g. 500 mg) |
-| `frequency` | Utf8 | Administration schedule |
-| `start_date` | Utf8 | Medication start date (ISO format) |
-| `end_date` | Utf8 (nullable) | Medication end date if discontinued |
-| `source` | Utf8 | Origin of this medication record |
-| `notes` | Utf8 | Prescribing or clinical notes |
-
-**Test queries**: 2/2 pass
-
----
-
-## 3. `careops_lab_reports`
-
-Lab and test observations.
-
-**Table**: `careops_lab_reports.lab_reports`
+**Manifest:** `coral/sources/careops/patients/manifest.yaml`
+**Data:** `data/patients.jsonl` (5 rows)
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `report_date` | Utf8 | Date of lab test |
-| `test_name` | Utf8 | Name of the test (e.g. HbA1c, Fasting Glucose) |
-| `value` | Utf8 | Test result value |
-| `unit` | Utf8 | Unit of measurement |
-| `reference_range` | Utf8 | Normal reference range |
-| `lab_name` | Utf8 | Name of the lab |
-| `file_path` | Utf8 | Path to original report file |
+| `patient_id` | Utf8 | Primary key. Format: `pat-001` |
+| `name` | Utf8 | Full name |
+| `age` | Int64 | Age in years |
+| `gender` | Utf8 | Gender |
+| `condition_focus` | Utf8 | Primary condition (e.g. "Type 2 Diabetes") |
+| `primary_doctor` | Utf8 | PCP name |
 
-**Test queries**: 2/2 pass
+**Sample row:**
+```json
+{"patient_id":"pat-001","name":"Raman Mehta","age":68,"gender":"Male","condition_focus":"Type 2 Diabetes","primary_doctor":"Dr. Sharma"}
+```
 
----
-
-## 4. `careops_doctor_chats`
-
-Doctor instructions parsed from secure messaging or visit summaries.
-
-**Table**: `careops_doctor_chats.doctor_chats`
-
-| Column | Type | Description |
-|--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `date` | Utf8 | Date of the message |
-| `doctor` | Utf8 | Doctor who sent the instruction |
-| `message` | Utf8 | Full message text |
-| `instruction_type` | Utf8 | Type of instruction (e.g. dose_change, lab_ordered) |
-| `medicine_mentioned` | Utf8 | Medicine referenced in the message |
-| `followup_date` | Utf8 | Recommended follow-up date |
-
-**Test queries**: 2/2 pass
+**Used in queries:**
+```sql
+SELECT p.name, p.age, p.condition_focus
+FROM careops_patients.patients p
+WHERE p.patient_id = 'pat-001'
+```
 
 ---
 
-## 5. `careops_pharmacy_receipts`
+### 2. careops_medications
 
-Refill and purchase evidence.
+**Purpose:** Current and historical medication records with dosage schedules.
 
-**Table**: `careops_pharmacy_receipts.pharmacy_receipts`
+**Manifest:** `coral/sources/careops/medications/manifest.yaml`
+**Data:** `data/medications.jsonl` (9 rows)
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `date` | Utf8 | Date of purchase |
-| `medicine` | Utf8 | Medicine name |
-| `quantity` | Utf8 | Quantity dispensed |
-| `amount` | Utf8 | Amount paid |
+| `patient_id` | Utf8 | FK to careops_patients |
+| `medicine_name` | Utf8 | Medicine name |
+| `dose` | Utf8 | Dosage (e.g. "500 mg") |
+| `frequency` | Utf8 | Schedule (e.g. "Once daily") |
+| `start_date` | Utf8 | Start date (ISO) |
+| `end_date` | Utf8 (nullable) | End date if discontinued |
+| `source` | Utf8 | Record origin |
+| `notes` | Utf8 | Clinical notes |
+
+**Sample row:**
+```json
+{"patient_id":"pat-001","medicine_name":"Metformin","dose":"500 mg","frequency":"Twice daily","start_date":"2025-03-15","end_date":null,"source":"Doctor Chat","notes":"Increase to 1000 mg if HbA1c > 7.5"}
+```
+
+**Key query pattern:** Find current medicines (where `end_date IS NULL`), detect recent changes (compare `start_date` against a cutoff).
+
+---
+
+### 3. careops_lab_reports
+
+**Purpose:** Lab test results including HbA1c, fasting glucose, and other clinical observations.
+
+**Manifest:** `coral/sources/careops/lab_reports/manifest.yaml`
+**Data:** `data/lab_reports.jsonl` (12 rows)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `patient_id` | Utf8 | FK to careops_patients |
+| `report_date` | Utf8 | Collection/report date |
+| `test_name` | Utf8 | Test name |
+| `value` | Utf8 | Result value |
+| `unit` | Utf8 | Unit |
+| `reference_range` | Utf8 | Normal range |
+| `lab_name` | Utf8 | Lab name |
+| `file_path` | Utf8 | PDF path |
+
+**Sample row:**
+```json
+{"patient_id":"pat-001","report_date":"2025-06-10","test_name":"HbA1c","value":"7.2","unit":"%","reference_range":"<5.7","lab_name":"Metropolis Labs","file_path":"/data/labs/hba1c_jun2025.pdf"}
+```
+
+**Key query pattern:** Get latest result per test name, flag values outside reference range.
+
+---
+
+### 4. careops_doctor_chats
+
+**Purpose:** Doctor instructions parsed from secure messaging or visit summaries. These are the instructions that drive care decisions.
+
+**Manifest:** `coral/sources/careops/doctor_chats/manifest.yaml`
+**Data:** `data/doctor_chats.jsonl` (7 rows)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `patient_id` | Utf8 | FK to careops_patients |
+| `date` | Utf8 | Instruction date |
+| `doctor` | Utf8 | Doctor name |
+| `message` | Utf8 | Full instruction text |
+| `instruction_type` | Utf8 | Category |
+| `medicine_mentioned` | Utf8 (nullable) | Referenced medicine |
+| `followup_date` | Utf8 (nullable) | Follow-up date |
+
+**Instruction types:** `medicine_change`, `safety_instruction`, `visit_preparation`, `monitoring`
+
+**Sample row:**
+```json
+{"patient_id":"pat-001","date":"2025-05-20","doctor":"Dr. Sharma","message":"Stop Amlodipine 5 mg. Start Telmisartan 40 mg once daily.","instruction_type":"medicine_change","medicine_mentioned":"Telmisartan","followup_date":"2025-07-01"}
+```
+
+---
+
+### 5. careops_pharmacy_receipts
+
+**Purpose:** Pharmacy refill and purchase evidence — proves the patient filled their prescriptions.
+
+**Manifest:** `coral/sources/careops/pharmacy_receipts/manifest.yaml`
+**Data:** `data/pharmacy_receipts.jsonl` (11 rows)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `patient_id` | Utf8 | FK to careops_patients |
+| `date` | Utf8 | Purchase date |
+| `medicine` | Utf8 | Medicine dispensed |
+| `quantity` | Utf8 | Quantity |
+| `amount` | Utf8 | Cost (INR) |
 | `pharmacy` | Utf8 | Pharmacy name |
-| `receipt_file` | Utf8 | Path to receipt image |
+| `receipt_file` | Utf8 | Receipt image path |
 
-**Test queries**: 2/2 pass
+**Sample row:**
+```json
+{"patient_id":"pat-001","date":"2025-06-01","medicine":"Metformin 500 mg","quantity":"60 tablets","amount":"₹180","pharmacy":"Apollo Pharmacy","receipt_file":"/data/receipts/metformin_jun2025.jpg"}
+```
 
 ---
 
-## 6. `careops_symptom_logs`
+### 6. careops_symptom_logs
 
-Symptom history and severity logs.
+**Purpose:** Symptom tracking records logged by family caregivers, correlated to medicines.
 
-**Table**: `careops_symptom_logs.symptom_logs`
+**Manifest:** `coral/sources/careops/symptom_logs/manifest.yaml`
+**Data:** `data/symptom_logs.jsonl` (11 rows)
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `date` | Utf8 | Date symptom was logged |
+| `patient_id` | Utf8 | FK to careops_patients |
+| `date` | Utf8 | Observation date |
 | `symptom` | Utf8 | Symptom description |
-| `severity` | Int64 | Severity rating (1-10) |
-| `notes` | Utf8 | Additional notes |
-| `related_medicine` | Utf8 | Medicine potentially related to the symptom |
+| `severity` | Int64 | Rating 1–5 |
+| `notes` | Utf8 | Context |
+| `related_medicine` | Utf8 | Potentially related medicine |
 
-**Test queries**: 2/2 pass
+**Sample row:**
+```json
+{"patient_id":"pat-001","date":"2025-06-05","symptom":"Dizziness after standing","severity":3,"notes":"Lasts about 2 minutes, usually in morning","related_medicine":"Telmisartan"}
+```
 
 ---
 
-## 7. `careops_appointments`
+### 7. careops_appointments
 
-Upcoming and past appointments.
+**Purpose:** Upcoming and past medical appointment records.
 
-**Table**: `careops_appointments.appointments`
+**Manifest:** `coral/sources/careops/appointments/manifest.yaml`
+**Data:** `data/appointments.jsonl` (6 rows)
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `appointment_date` | Utf8 | Date of appointment |
+| `patient_id` | Utf8 | FK to careops_patients |
+| `appointment_date` | Utf8 | Appointment date |
 | `doctor` | Utf8 | Doctor name |
 | `speciality` | Utf8 | Medical speciality |
-| `reason` | Utf8 | Reason for visit |
-| `status` | Utf8 | Appointment status (scheduled/completed) |
+| `reason` | Utf8 | Visit reason |
+| `status` | Utf8 | scheduled/completed |
 
-**Test queries**: 2/2 pass
+**Sample row:**
+```json
+{"patient_id":"pat-001","appointment_date":"2025-06-28","doctor":"Dr. Sharma","speciality":"Endocrinology","reason":"Diabetes follow-up","status":"scheduled"}
+```
 
 ---
 
-## 8. `careops_prescription_ocr`
+### 8. careops_prescription_ocr
 
-OCR-extracted prescription data.
+**Purpose:** OCR-extracted prescription data from physical prescription photos. Represents a real-world data ingestion path.
 
-**Table**: `careops_prescription_ocr.prescription_ocr`
+**Manifest:** `coral/sources/careops/prescription_ocr/manifest.yaml`
+**Data:** `data/prescription_ocr.jsonl` (5 rows)
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `image_file` | Utf8 | Path to prescription image |
+| `patient_id` | Utf8 | FK to careops_patients |
+| `image_file` | Utf8 | Prescription image path |
 | `ocr_text` | Utf8 | Raw OCR output |
-| `extracted_medicines` | Utf8 | Parsed medicine names from OCR |
+| `extracted_medicines` | Utf8 | Parsed medicine names |
 | `doctor_name` | Utf8 | Prescribing doctor |
-| `prescription_date` | Utf8 | Date of prescription |
+| `prescription_date` | Utf8 | Rx date |
 
-**Test queries**: 2/2 pass
+**Sample row:**
+```json
+{"patient_id":"pat-001","image_file":"/data/ocr/rx_jun2025.jpg","ocr_text":"Telmisartan 40 mg\nOne daily\nDr. Sharma","extracted_medicines":"Telmisartan 40 mg","doctor_name":"Dr. Sharma","prescription_date":"2025-06-01"}
+```
 
 ---
 
-## 9. `careops_family_notes`
+### 9. careops_family_notes
 
-Family caregiver notes.
+**Purpose:** Free-text notes from family caregivers providing context, observations, and concerns.
 
-**Table**: `careops_family_notes.family_notes`
+**Manifest:** `coral/sources/careops/family_notes/manifest.yaml`
+**Data:** `data/family_notes.jsonl` (7 rows)
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `patient_id` | Utf8 | Foreign key to careops_patients |
-| `date` | Utf8 | Date of note |
-| `note_author` | Utf8 | Family member who wrote the note |
+| `patient_id` | Utf8 | FK to careops_patients |
+| `date` | Utf8 | Note date |
+| `note_author` | Utf8 | Family member name |
 | `note_text` | Utf8 | Note content |
-| `priority` | Utf8 | Priority level (high/medium/low) |
+| `priority` | Utf8 | high/normal |
 
-**Test queries**: 2/2 pass
+**Sample row:**
+```json
+{"patient_id":"pat-001","date":"2025-06-20","note_author":"Priya (daughter)","note_text":"Dad seems more tired than usual, appetite reduced. Blood sugar fasting this morning was 145.","priority":"high"}
+```
 
 ---
 
-## Adding a New Source Spec
+## Cross-Source Joins
 
-1. Create a JSONL data file in `data/` (e.g. `data/new_source.jsonl`)
-2. Create a Coral manifest in `coral/sources/careops/{name}/manifest.yaml` with:
-   - `backend: jsonl`
-   - Proper table columns (omit `format` property)
-   - 2+ test queries
-   - Hardcoded absolute path in `source.location`
-3. Register: `coral source add --file coral/sources/careops/{name}/manifest.yaml`
-4. Add a query template function in `src/lib/coral/careops-queries.ts`
-5. Update `loadCareOpsData` and TypeScript types if the data is loaded client-side
-6. Test: `coral source test careops_{name}`
+The most important query pattern in CareOps is joining across sources. Here is the main join query used for the doctor visit packet:
+
+```sql
+SELECT
+  m.medicine_name, m.dose, m.frequency, m.start_date,
+  l.test_name, l.value, l.report_date,
+  d.message, d.instruction_type,
+  s.symptom, s.severity, s.date,
+  p.medicine, p.date as refill_date,
+  n.note_text, n.priority,
+  a.appointment_date, a.doctor, a.reason
+FROM careops_patients.patients p
+LEFT JOIN careops_medications.medications m ON p.patient_id = m.patient_id
+LEFT JOIN careops_lab_reports.lab_reports l ON p.patient_id = l.patient_id
+LEFT JOIN careops_doctor_chats.doctor_chats d ON p.patient_id = d.patient_id
+LEFT JOIN careops_symptom_logs.symptom_logs s ON p.patient_id = s.patient_id
+LEFT JOIN careops_pharmacy_receipts.pharmacy_receipts p ON p.patient_id = p.patient_id
+LEFT JOIN careops_family_notes.family_notes n ON p.patient_id = n.patient_id
+LEFT JOIN careops_appointments.appointments a ON p.patient_id = a.patient_id
+WHERE p.patient_id = 'pat-001'
+ORDER BY m.start_date DESC, l.report_date DESC, s.date DESC
+```
+
+## Query Builders
+
+The typed query builders in `src/lib/coral/careops-queries.ts` provide 8 parameterized SQL templates:
+
+| Function | Sources Used | Purpose |
+|----------|-------------|---------|
+| `getPatientProfile(id)` | patients | Get patient name, age, condition, doctor |
+| `getCurrentMedicines(id)` | medications | Active prescriptions (null end_date) |
+| `getMedicineChanges(id, since)` | medications, doctor_chats | Recently started/changed medicines |
+| `getRecentLabs(id, days)` | lab_reports | Labs within N days |
+| `getRecentSymptoms(id, days)` | symptom_logs | Symptoms within N days |
+| `getRefillEvidence(id)` | pharmacy_receipts | Pharmacy refill records |
+| `getMissingRecords(id)` | All 9 | Detect absent record types |
+| `getCarePacketJoinQuery(id)` | All 9 | Full cross-source JOIN for packet |

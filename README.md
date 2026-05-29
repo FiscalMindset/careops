@@ -7,7 +7,7 @@
 <div align="center">
 
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/FiscalMindset/careops)
-[![Tests](https://img.shields.io/badge/tests-16%2F16-brightgreen)](https://github.com/FiscalMindset/careops)
+[![Tests](https://img.shields.io/badge/tests-22%2F22-brightgreen)](https://github.com/FiscalMindset/careops)
 [![Coral](https://img.shields.io/badge/Coral-v0.2.0-blue)](https://github.com/withcoral/coral)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=next.js)](https://nextjs.org/)
 [![Hackathon](https://img.shields.io/badge/Coral-Hackathon%20Track%202-8b5cf6)](https://coral.co)
@@ -34,13 +34,13 @@ CareOps joins medical records, prescription photos, lab reports, doctor chat ins
 
 | Feature | Description |
 |---------|-------------|
-| **Interactive Data Sources** | `/data-sources` is now a live client component with clickable Lint / Add / Test / Query buttons that run real Coral CLI commands per source |
-| **Live Source Status** | Each source card shows registration status (Not Registered → Lint OK → Registered → Tests Passed) fetched from `coral source list` on mount |
-| **Execution History** | Every CLI action is logged per source with timestamp, stdout, stderr, and success/failure |
-| **Timeline Rewrite** | `/timeline` now queries 7 Coral sources in parallel using `careops-queries.ts` templates instead of the old broken `TIMELINE_QUERY` with `_spec` tables |
-| **Coral CLI Client** | New `coral-cli-client.ts` with `runCoralSql`, `runCoralSourceLint`, `runCoralSourceAdd`, `runCoralSourceTest`, `runCoralSourceList` |
-| **Source Action API** | `POST /api/coral/source-action` supports `lint`, `add`, `test`, `query` per source |
-| **16 tests** | 7 careops + 9 coral-cli tests, all passing |
+| **Interactive Mermaid Diagram** | Dashboard shows a live architecture flow diagram rendered via the `mermaid` npm package — no build step required |
+| **Analytics Dashboard** | `/analytics` — per-patient KPI cards, symptom severity charts, cross-patient comparison, Ollama model status |
+| **Interactive Exports** | `/exports` — list, preview, download, and delete exported Markdown packets |
+| **Patient Selector** | Dropdown component across dashboard + analytics for quick patient switching |
+| **5 Patients, 73 Records** | Expanded synthetic data for richer demos |
+| **Ollama Integration** | Community source spec with 3 local models (llama3.2, phi3, kimi-k2.5) |
+| **22 tests** | 13 careops + 9 coral-cli tests, all passing |
 
 ## 🌊 Why Coral? (Track 2)
 
@@ -71,6 +71,69 @@ flowchart TD
     Packet --> Evidence["SQL Evidence Panel"]
 ```
 
+### Tech Stack
+
+```mermaid
+graph TB
+    subgraph Frontend["Frontend"]
+        NEXT["Next.js 15 App Router"]
+        TS["TypeScript"]
+        TW["Tailwind CSS"]
+        LI["Lucide Icons"]
+    end
+
+    subgraph Query["Query Layer"]
+        CC["CoralClient\nmode-switching abstraction"]
+        CCLI["Coral CLI Client\nsafe execFile wrapper"]
+        CP["Coral Output Parser\nJSON result parser"]
+    end
+
+    subgraph Coral["Coral Engine"]
+        CSQL["coral sql --format json"]
+        CLINT["coral source lint"]
+        CADD["coral source add"]
+        CTEST["coral source test"]
+    end
+
+    subgraph Sources["9 Coral Source Specs"]
+        PAT["careops_patients\n3 patients"]
+        MED["careops_medications\n5 records"]
+        LAB["careops_lab_reports\n5 records"]
+        CHAT["careops_doctor_chats\n5 records"]
+        PHARM["careops_pharmacy_receipts\n5 records"]
+        SYMP["careops_symptom_logs\n5 records"]
+        APPT["careops_appointments\n3 records"]
+        OCR["careops_prescription_ocr\n3 records"]
+        NOTES["careops_family_notes\n4 records"]
+    end
+
+    subgraph Data["Data Layer"]
+        JSONL["JSONL Files\n9 files, 73 total rows"]
+        CSV["CSV Files\n9 files (SQLite fallback)"]
+    end
+
+    subgraph Agent["Agent Layer"]
+        AGT["CareOps Packet Generator\n10+ query pipeline"]
+        QRY["Query Builders\n8 typed SQL templates"]
+        SAFE["Safety Rules Engine\nno diagnosis/prescription"]
+    end
+
+    NEXT --> CC
+    CC --> CCLI
+    CCLI --> CSQL
+    CSQL --> CLINT
+    CSQL --> CADD
+    CSQL --> CTEST
+    CCLI --> CP
+    CP --> AGT
+    CSQL --> Sources
+    Sources --> JSONL
+    Sources --> CSV
+    AGT --> QRY
+    AGT --> SAFE
+    QRY --> Sources
+```
+
 ## 🪸 About Coral
 
 Coral is an open-source SQL-based abstraction layer over disparate data sources. Instead of writing multiple API clients, Coral lets you query all sources with SQL JOINs.
@@ -83,15 +146,15 @@ Coral is an open-source SQL-based abstraction layer over disparate data sources.
 
 | Source | Table | Format | Rows | Status |
 |--------|-------|--------|------|--------|
-| `careops_patients` | patients | JSONL | 3 | ✅ 2/2 tests pass |
-| `careops_medications` | medications | JSONL | 5 | ✅ 2/2 tests pass |
-| `careops_lab_reports` | lab_reports | JSONL | 5 | ✅ 2/2 tests pass |
-| `careops_doctor_chats` | doctor_chats | JSONL | 5 | ✅ 2/2 tests pass |
-| `careops_pharmacy_receipts` | pharmacy_receipts | JSONL | 5 | ✅ 2/2 tests pass |
-| `careops_symptom_logs` | symptom_logs | JSONL | 5 | ✅ 2/2 tests pass |
-| `careops_appointments` | appointments | JSONL | 3 | ✅ 2/2 tests pass |
-| `careops_prescription_ocr` | prescription_ocr | JSONL | 3 | ✅ 2/2 tests pass |
-| `careops_family_notes` | family_notes | JSONL | 4 | ✅ 2/2 tests pass |
+| `careops_patients` | patients | JSONL | 5 | ✅ 2/2 tests pass |
+| `careops_medications` | medications | JSONL | 9 | ✅ 2/2 tests pass |
+| `careops_lab_reports` | lab_reports | JSONL | 12 | ✅ 2/2 tests pass |
+| `careops_doctor_chats` | doctor_chats | JSONL | 7 | ✅ 2/2 tests pass |
+| `careops_pharmacy_receipts` | pharmacy_receipts | JSONL | 11 | ✅ 2/2 tests pass |
+| `careops_symptom_logs` | symptom_logs | JSONL | 11 | ✅ 2/2 tests pass |
+| `careops_appointments` | appointments | JSONL | 6 | ✅ 2/2 tests pass |
+| `careops_prescription_ocr` | prescription_ocr | JSONL | 5 | ✅ 2/2 tests pass |
+| `careops_family_notes` | family_notes | JSONL | 7 | ✅ 2/2 tests pass |
 
 **18/18 declared test queries pass** on registration.
 
