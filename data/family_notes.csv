@@ -1,5 +1,8 @@
 patient_id,date,note_author,note_text,priority
 pat-001,2026-05-10,Anita Mehta,Father has not recorded BP or weight this month; ask clinic whether they need these for follow-up.,high
 pat-001,2026-05-11,Anita Mehta,He prefers morning appointments and carries medicines in a blue pouch.,normal
+pat-001,2026-05-22,Anita Mehta,Father mentioned increased thirst. Checked glucose once and it was 168 after lunch.,high
 pat-002,2026-05-01,Rohan Shah,Mother shared home BP photos but not entered into tracker.,normal
 pat-003,2026-04-18,Kavya Kapoor,Discharge folder is with uncle; bring it to next visit.,high
+pat-004,2026-05-14,Meera Verma,"Mother knee pain is worse this week. She has been taking extra acetaminophen. Need to ask doctor.",high
+pat-005,2026-05-20,Neha Krishnan,Husband peak flow readings declining. Has been using Albuterol inhaler 3-4 times per week. Should bring this up at next visit.,high

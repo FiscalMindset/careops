@@ -2,5 +2,11 @@ patient_id,date,medicine,quantity,amount,pharmacy,receipt_file
 pat-001,2026-03-16,Sitagliptin 50 mg,30 tablets,680.00,GreenCross Pharmacy,/demo/receipts/sitagliptin-mar.jpg
 pat-001,2026-04-16,Sitagliptin 50 mg,30 tablets,680.00,GreenCross Pharmacy,/demo/receipts/sitagliptin-apr.jpg
 pat-001,2026-05-01,Metformin 500 mg,60 tablets,145.00,GreenCross Pharmacy,/demo/receipts/metformin-may.jpg
+pat-001,2026-05-15,Atorvastatin 10 mg,30 tablets,85.00,GreenCross Pharmacy,/demo/receipts/atorvastatin-may.jpg
 pat-002,2026-04-09,Amlodipine 5 mg,30 tablets,92.00,HealthHub Pharmacy,/demo/receipts/amlodipine-apr.jpg
+pat-002,2026-05-09,Amlodipine 5 mg,30 tablets,92.00,HealthHub Pharmacy,/demo/receipts/amlodipine-may.jpg
 pat-003,2026-04-02,Pantoprazole 40 mg,21 tablets,180.00,Metro Pharmacy,/demo/receipts/pantoprazole-apr.jpg
+pat-004,2026-05-05,Meloxicam 7.5 mg,30 tablets,210.00,CareWell Pharmacy,/demo/receipts/meloxicam-may.jpg
+pat-004,2026-05-05,Acetaminophen 500 mg,100 tablets,45.00,CareWell Pharmacy,/demo/receipts/acetaminophen-may.jpg
+pat-005,2026-05-01,Fluticasone Inhaler 110 mcg,1 inhaler,320.00,BreatheEasy Pharmacy,/demo/receipts/fluticasone-may.jpg
+pat-005,2026-05-01,Albuterol Inhaler 90 mcg,1 inhaler,180.00,BreatheEasy Pharmacy,/demo/receipts/albuterol-may.jpg

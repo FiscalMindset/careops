@@ -3,7 +3,16 @@ import { loadCareOpsData } from "@/lib/data/load-careops-data";
 import { assertSafetyBoundary, generateDoctorVisitPacket } from "@/lib/agent/careops-agent";
 import { packetToMarkdown } from "@/lib/export/markdown";
 import { CoralClient } from "@/lib/coral/client";
-import { DOCTOR_VISIT_PACKET_QUERY, TIMELINE_QUERY } from "@/lib/coral/queries";
+import {
+  getCarePacketJoinQuery,
+  getPatientProfileQuery,
+  getCurrentMedicinesQuery,
+  getRecentLabsQuery,
+  getSymptomTimelineQuery,
+  getPharmacyRefillsQuery,
+  getAppointmentQuery,
+  getFamilyNotesQuery,
+} from "@/lib/coral/careops-queries";
 
 beforeAll(() => {
   process.env.CAREOPS_QUERY_MODE = "sqlite";
@@ -18,24 +27,68 @@ describe("CareOps data loading", () => {
   });
 });
 
-describe("Coral SQL query execution (Mock)", () => {
-  it("joins medication, symptoms, labs, chats, and refills using SQLite", async () => {
+describe("Coral SQL query execution (SQLite)", () => {
+  it("runs care packet join query using Coral-style table names", async () => {
     const coral = new CoralClient();
-    const resp = await coral.executeQuery(DOCTOR_VISIT_PACKET_QUERY, ["pat-001"]);
+    const sql = getCarePacketJoinQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
     expect(resp.result!.rows.length).toBeGreaterThan(0);
     expect(resp.result!.columns).toContain("test_name");
+    expect(resp.result!.columns).toContain("medicine_name");
   });
-});
 
-describe("Patient timeline join", () => {
-  it("builds a timeline with multiple source types", async () => {
+  it("runs patient profile query", async () => {
     const coral = new CoralClient();
-    const resp = await coral.executeQuery(TIMELINE_QUERY, ["pat-001", "pat-001", "pat-001", "pat-001", "pat-001"]);
+    const sql = getPatientProfileQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
+    expect(resp.result!.rows.length).toBe(1);
+    expect(resp.result!.rows[0][1]).toBe("Raman Mehta");
+  });
 
-    const types = new Set(resp.result!.rows.map((row: any[]) => row[0]));
-    expect(types.size).toBeGreaterThanOrEqual(3);
-    expect(types.has("lab")).toBe(true);
-    expect(types.has("refill")).toBe(true);
+  it("runs medicines query", async () => {
+    const coral = new CoralClient();
+    const sql = getCurrentMedicinesQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
+    expect(resp.result!.rows.length).toBeGreaterThanOrEqual(2);
+    const names = resp.result!.rows.map((r: any[]) => r[0]);
+    expect(names).toContain("Metformin");
+  });
+
+  it("runs labs query", async () => {
+    const coral = new CoralClient();
+    const sql = getRecentLabsQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
+    expect(resp.result!.rows.length).toBeGreaterThanOrEqual(2);
+    const tests = resp.result!.rows.map((r: any[]) => r[1]);
+    expect(tests).toContain("HbA1c");
+  });
+
+  it("runs symptom timeline query", async () => {
+    const coral = new CoralClient();
+    const sql = getSymptomTimelineQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
+    expect(resp.result!.rows.length).toBeGreaterThan(0);
+  });
+
+  it("runs pharmacy refills query", async () => {
+    const coral = new CoralClient();
+    const sql = getPharmacyRefillsQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
+    expect(resp.result!.rows.length).toBeGreaterThan(0);
+  });
+
+  it("runs appointments query", async () => {
+    const coral = new CoralClient();
+    const sql = getAppointmentQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
+    expect(resp.result!.rows.length).toBeGreaterThan(0);
+  });
+
+  it("runs family notes query", async () => {
+    const coral = new CoralClient();
+    const sql = getFamilyNotesQuery("pat-001");
+    const resp = await coral.executeQuery(sql);
+    expect(resp.result!.rows.length).toBeGreaterThan(0);
   });
 });
 

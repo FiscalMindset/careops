@@ -1,5 +1,11 @@
 {"patient_id":"pat-001","date":"2026-03-18","symptom":"Mild nausea","severity":"2","notes":"Logged three days after Sitagliptin was added. Resolved by evening.","related_medicine":"Sitagliptin"}
 {"patient_id":"pat-001","date":"2026-04-02","symptom":"Dizziness","severity":"3","notes":"Occurred before lunch; family noted missed breakfast.","related_medicine":"Sitagliptin"}
 {"patient_id":"pat-001","date":"2026-05-09","symptom":"Fatigue","severity":"2","notes":"Afternoon tiredness after lab day.","related_medicine":"Metformin"}
+{"patient_id":"pat-001","date":"2026-05-20","symptom":"Increased thirst","severity":"2","notes":"Noted over past week. Could be related to glucose levels.","related_medicine":"Metformin"}
 {"patient_id":"pat-002","date":"2026-04-17","symptom":"Headache","severity":"2","notes":"Evening headache after long commute.","related_medicine":"Amlodipine"}
+{"patient_id":"pat-002","date":"2026-05-10","symptom":"Dizziness on standing","severity":"2","notes":"Occasional when getting up quickly from seated position.","related_medicine":"Amlodipine"}
 {"patient_id":"pat-003","date":"2026-04-13","symptom":"Stomach discomfort","severity":"3","notes":"Discuss at reconciliation visit.","related_medicine":"Pantoprazole"}
+{"patient_id":"pat-004","date":"2026-05-01","symptom":"Morning stiffness","severity":"3","notes":"Lasts about 45 minutes after waking. Affects both knees and hands.","related_medicine":"Meloxicam"}
+{"patient_id":"pat-004","date":"2026-05-18","symptom":"Knee pain","severity":"4","notes":"Right knee more painful after walking. Pain rating 4/5.","related_medicine":"Acetaminophen"}
+{"patient_id":"pat-005","date":"2026-05-12","symptom":"Wheezing","severity":"3","notes":"Occurs at night. Albuterol provides relief for 2-3 hours.","related_medicine":"Albuterol Inhaler"}
+{"patient_id":"pat-005","date":"2026-05-22","symptom":"Shortness of breath","severity":"3","notes":"After climbing stairs. Peak flow readings declining.","related_medicine":"Fluticasone Inhaler"}

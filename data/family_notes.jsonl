@@ -1,4 +1,7 @@
 {"patient_id":"pat-001","date":"2026-05-10","note_author":"Anita Mehta","note_text":"Father has not recorded BP or weight this month; ask clinic whether they need these for follow-up.","priority":"high"}
 {"patient_id":"pat-001","date":"2026-05-11","note_author":"Anita Mehta","note_text":"He prefers morning appointments and carries medicines in a blue pouch.","priority":"normal"}
+{"patient_id":"pat-001","date":"2026-05-22","note_author":"Anita Mehta","note_text":"Father mentioned increased thirst. Checked glucose once and it was 168 after lunch.","priority":"high"}
 {"patient_id":"pat-002","date":"2026-05-01","note_author":"Rohan Shah","note_text":"Mother shared home BP photos but not entered into tracker.","priority":"normal"}
 {"patient_id":"pat-003","date":"2026-04-18","note_author":"Kavya Kapoor","note_text":"Discharge folder is with uncle; bring it to next visit.","priority":"high"}
+{"patient_id":"pat-004","date":"2026-05-14","note_author":"Meera Verma","note_text":"Mother's knee pain is worse this week. She has been taking extra acetaminophen. Need to ask doctor.","priority":"high"}
+{"patient_id":"pat-005","date":"2026-05-20","note_author":"Neha Krishnan","note_text":"Husband's peak flow readings declining. Has been using Albuterol inhaler 3-4 times per week. Should bring this up at next visit.","priority":"high"}

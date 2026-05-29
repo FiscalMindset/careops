@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import path from "path";
 import { runCoralSql, checkCoralAvailable } from "./coral-cli-client";
 import { parseCoralJsonResult } from "./coral-output-parser";
+import { translateForSqlite } from "./careops-queries";
 
 export type QueryMode = "coral_cli" | "mock" | "sqlite";
 
@@ -35,11 +36,11 @@ export class CoralClient {
   private db: any = null;
   private _coralAvailable: boolean | null = null;
 
-  constructor() {
-    this.mode = getMode();
+  constructor(overrides?: { mode?: QueryMode; dbPath?: string }) {
+    this.mode = overrides?.mode || getMode();
     if (this.mode === "sqlite" || this.mode === "mock") {
       if (typeof window === "undefined") {
-        const dbPath = process.env.DATABASE_URL?.replace("file:", "") || "./careops.db";
+        const dbPath = overrides?.dbPath || process.env.DATABASE_URL?.replace("file:", "") || "./careops.db";
         this.db = new Database(path.resolve(process.cwd(), dbPath));
       }
     }
@@ -124,7 +125,8 @@ export class CoralClient {
         };
       }
 
-      const stmt = this.db.prepare(sql);
+      const translatedSql = this.mode === "sqlite" ? translateForSqlite(sql) : sql;
+      const stmt = this.db.prepare(translatedSql);
       const rows = stmt.all(...params);
 
       if (rows.length === 0) {

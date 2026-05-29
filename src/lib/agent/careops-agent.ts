@@ -1,10 +1,26 @@
 import type { DoctorVisitPacket, JoinedEvidenceRow } from "@/types/careops";
 import { getPatientDataset } from "@/lib/data/load-careops-data";
 import { CoralClient } from "@/lib/coral/client";
-import { DOCTOR_VISIT_PACKET_QUERY } from "@/lib/coral/queries";
+import {
+  getCarePacketJoinQuery,
+  getCurrentMedicinesQuery,
+  getRecentLabsQuery,
+  getDoctorInstructionsQuery,
+  getSymptomTimelineQuery,
+  getPharmacyRefillsQuery,
+} from "@/lib/coral/careops-queries";
 
 export const SAFETY_DISCLAIMER =
   "This is not medical advice. Please consult a licensed doctor. CareOps does not diagnose, prescribe medicine, or recommend medicine changes.";
+
+function extractRows(resp: { result: { columns: string[]; rows: any[][] } | null }): Record<string, any>[] {
+  if (!resp.result) return [];
+  return resp.result.rows.map((row) => {
+    const obj: Record<string, any> = {};
+    resp.result!.columns.forEach((col, i) => (obj[col] = row[i]));
+    return obj;
+  });
+}
 
 export async function generateDoctorVisitPacket(patientId: string, visitPurpose: string): Promise<DoctorVisitPacket> {
   const patientData = await getPatientDataset(patientId);
@@ -15,11 +31,11 @@ export async function generateDoctorVisitPacket(patientId: string, visitPurpose:
   const coral = new CoralClient();
   let evidenceRows: JoinedEvidenceRow[] = [];
   try {
-    const resp = await coral.executeQuery(DOCTOR_VISIT_PACKET_QUERY, [patientId]);
+    const resp = await coral.executeQuery(getCarePacketJoinQuery(patientId));
     if (resp.result) {
       evidenceRows = resp.result.rows.map((rowArray: any[]) => {
         const obj: Record<string, any> = {};
-        resp.result!.columns.forEach((col: string, i: number) => obj[col] = rowArray[i]);
+        resp.result!.columns.forEach((col: string, i: number) => (obj[col] = rowArray[i]));
         obj.confidence = "high";
         return obj as JoinedEvidenceRow;
       });
@@ -30,7 +46,10 @@ export async function generateDoctorVisitPacket(patientId: string, visitPurpose:
 
   const currentMedicines = patientData.medications.filter((medication) => !medication.end_date);
   const medicineChanges = patientData.doctorChats.filter((chat) => chat.instruction_type === "medicine_change");
-  const recentLabs = patientData.labReports.slice().sort((a, b) => b.report_date.localeCompare(a.report_date)).slice(0, 5);
+  const recentLabs = patientData.labReports
+    .slice()
+    .sort((a, b) => b.report_date.localeCompare(a.report_date))
+    .slice(0, 5);
   const upcomingAppointment = patientData.appointments
     .filter((appointment) => appointment.status === "scheduled")
     .sort((a, b) => a.appointment_date.localeCompare(b.appointment_date))[0];
@@ -41,7 +60,19 @@ export async function generateDoctorVisitPacket(patientId: string, visitPurpose:
     "Symptoms were logged after the medicine change. Ask the doctor whether the timing may be relevant.",
     "Do the refill receipts and current medicine list match what the clinic expects the patient to be taking?",
     "Should BP and weight logs be recorded before the next follow-up?",
-    "Are there any records the family should keep in one place before the next appointment?"
+    "Are there any records the family should keep in one place before the next appointment?",
+  ];
+
+  const sources = [
+    "careops_patients",
+    "careops_medications",
+    "careops_lab_reports",
+    "careops_doctor_chats",
+    "careops_pharmacy_receipts",
+    "careops_symptom_logs",
+    "careops_appointments",
+    "careops_prescription_ocr",
+    "careops_family_notes",
   ];
 
   return {
@@ -58,27 +89,17 @@ export async function generateDoctorVisitPacket(patientId: string, visitPurpose:
     upcomingAppointment,
     missingRecords,
     questions,
-    timeline: [], // Handled separately in timeline view
+    timeline: [],
     evidenceRows,
-    sql: DOCTOR_VISIT_PACKET_QUERY,
-    sourcesUsed: [
-      "careops_patients_spec",
-      "careops_medications_spec",
-      "careops_lab_reports_spec",
-      "careops_doctor_chats_spec",
-      "careops_pharmacy_receipts_spec",
-      "careops_symptom_logs_spec",
-      "careops_appointments_spec",
-      "careops_prescription_ocr_spec",
-      "careops_family_notes_spec"
-    ],
-    safetyDisclaimer: SAFETY_DISCLAIMER
+    sql: getCarePacketJoinQuery(patientId),
+    sourcesUsed: sources,
+    safetyDisclaimer: SAFETY_DISCLAIMER,
   };
 }
 
 function detectMissingRecords(patientData: Awaited<ReturnType<typeof getPatientDataset>>): string[] {
   const notes = patientData.familyNotes.map((note) => note.note_text.toLowerCase()).join(" ");
-  const missing = [];
+  const missing: string[] = [];
 
   if (!notes.includes("bp") || !notes.includes("weight")) {
     missing.push("Missing BP and weight records for this month.");
@@ -96,6 +117,12 @@ function detectMissingRecords(patientData: Awaited<ReturnType<typeof getPatientD
 }
 
 export function assertSafetyBoundary(text: string) {
-  const unsafePhrases = ["you should stop", "increase the dose", "decrease the dose", "diagnosis is", "caused by sitagliptin"];
+  const unsafePhrases = [
+    "you should stop",
+    "increase the dose",
+    "decrease the dose",
+    "diagnosis is",
+    "caused by sitagliptin",
+  ];
   return !unsafePhrases.some((phrase) => text.toLowerCase().includes(phrase));
 }

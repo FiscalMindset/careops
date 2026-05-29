@@ -1,3 +1,6 @@
 {"patient_id":"pat-001","appointment_date":"2026-05-31","doctor":"Dr. Asha Iyer","speciality":"Endocrinology","reason":"Diabetes follow-up","status":"scheduled"}
 {"patient_id":"pat-002","appointment_date":"2026-06-10","doctor":"Dr. Vikram Sethi","speciality":"Cardiology","reason":"Hypertension review","status":"scheduled"}
 {"patient_id":"pat-003","appointment_date":"2026-05-20","doctor":"Dr. Nisha Rao","speciality":"Internal Medicine","reason":"Medication reconciliation","status":"completed"}
+{"patient_id":"pat-004","appointment_date":"2026-06-15","doctor":"Dr. Priya Sharma","speciality":"Rheumatology","reason":"Arthritis management review","status":"scheduled"}
+{"patient_id":"pat-004","appointment_date":"2026-04-22","doctor":"Dr. Priya Sharma","speciality":"Rheumatology","reason":"Initial arthritis consultation","status":"completed"}
+{"patient_id":"pat-005","appointment_date":"2026-06-20","doctor":"Dr. Sameer Khan","speciality":"Pulmonology","reason":"Asthma follow-up","status":"scheduled"}

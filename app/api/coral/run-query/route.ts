@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCarePacketJoinQuery } from "@/lib/coral/careops-queries";
 import { CoralClient } from "@/lib/coral/client";
+import type { QueryMode } from "@/lib/coral/client";
 
 export async function GET(request: NextRequest) {
   const patientId = request.nextUrl.searchParams.get("patientId") || "";
   const purpose = request.nextUrl.searchParams.get("purpose") || "diabetes follow-up";
+  const modeParam = request.nextUrl.searchParams.get("mode") as QueryMode | null;
 
   if (!patientId) {
     return NextResponse.json({ error: "patientId is required" }, { status: 400 });
@@ -14,10 +16,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid patientId format" }, { status: 400 });
   }
 
-  const coral = new CoralClient();
+  const coral = new CoralClient(modeParam ? { mode: modeParam } : undefined);
+  const mode = coral.executionMode;
   const sql = getCarePacketJoinQuery(patientId);
   const resp = await coral.executeQuery(sql);
-  const mode = coral.executionMode;
 
   const joinedRows = resp.result
     ? resp.result.rows.map((rowArray: any[]) => {

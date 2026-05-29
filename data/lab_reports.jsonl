@@ -1,5 +1,12 @@
 {"patient_id":"pat-001","report_date":"2026-05-06","test_name":"HbA1c","value":"8.1","unit":"%","reference_range":"doctor target varies by patient","lab_name":"CityCare Labs","file_path":"/demo/labs/pat-001-hba1c-may.pdf"}
 {"patient_id":"pat-001","report_date":"2026-05-06","test_name":"Fasting Glucose","value":"154","unit":"mg/dL","reference_range":"70-99","lab_name":"CityCare Labs","file_path":"/demo/labs/pat-001-fbg-may.pdf"}
 {"patient_id":"pat-001","report_date":"2026-02-18","test_name":"HbA1c","value":"8.4","unit":"%","reference_range":"doctor target varies by patient","lab_name":"CityCare Labs","file_path":"/demo/labs/pat-001-hba1c-feb.pdf"}
+{"patient_id":"pat-001","report_date":"2026-02-18","test_name":"Fasting Glucose","value":"162","unit":"mg/dL","reference_range":"70-99","lab_name":"CityCare Labs","file_path":"/demo/labs/pat-001-fbg-feb.pdf"}
 {"patient_id":"pat-002","report_date":"2026-04-12","test_name":"Creatinine","value":"0.9","unit":"mg/dL","reference_range":"0.6-1.1","lab_name":"NorthPoint Diagnostics","file_path":"/demo/labs/pat-002-creatinine.pdf"}
+{"patient_id":"pat-002","report_date":"2026-04-12","test_name":"Blood Pressure Systolic","value":"142","unit":"mmHg","reference_range":"<130","lab_name":"NorthPoint Diagnostics","file_path":"/demo/labs/pat-002-bp.pdf"}
 {"patient_id":"pat-003","report_date":"2026-04-05","test_name":"Hemoglobin","value":"12.2","unit":"g/dL","reference_range":"13.5-17.5","lab_name":"Metro Labs","file_path":"/demo/labs/pat-003-hb.pdf"}
+{"patient_id":"pat-003","report_date":"2026-04-05","test_name":"Potassium","value":"4.1","unit":"mmol/L","reference_range":"3.5-5.1","lab_name":"Metro Labs","file_path":"/demo/labs/pat-003-k.pdf"}
+{"patient_id":"pat-004","report_date":"2026-05-15","test_name":"C-Reactive Protein","value":"4.8","unit":"mg/L","reference_range":"<3.0","lab_name":"Arthritis Diagnostics","file_path":"/demo/labs/pat-004-crp.pdf"}
+{"patient_id":"pat-004","report_date":"2026-05-15","test_name":"Rheumatoid Factor","value":"14","unit":"IU/mL","reference_range":"<20","lab_name":"Arthritis Diagnostics","file_path":"/demo/labs/pat-004-rf.pdf"}
+{"patient_id":"pat-005","report_date":"2026-05-08","test_name":"FEV1","value":"72","unit":"% predicted","reference_range":">80","lab_name":"PulmoCare Labs","file_path":"/demo/labs/pat-005-fev1.pdf"}
+{"patient_id":"pat-005","report_date":"2026-05-08","test_name":"Peak Flow","value":"340","unit":"L/min","reference_range":"450-650","lab_name":"PulmoCare Labs","file_path":"/demo/labs/pat-005-peakflow.pdf"}

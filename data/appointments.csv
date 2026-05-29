@@ -2,3 +2,6 @@ patient_id,appointment_date,doctor,speciality,reason,status
 pat-001,2026-05-31,Dr. Asha Iyer,Endocrinology,Diabetes follow-up,scheduled
 pat-002,2026-06-10,Dr. Vikram Sethi,Cardiology,Hypertension review,scheduled
 pat-003,2026-05-20,Dr. Nisha Rao,Internal Medicine,Medication reconciliation,completed
+pat-004,2026-06-15,Dr. Priya Sharma,Rheumatology,Arthritis management review,scheduled
+pat-004,2026-04-22,Dr. Priya Sharma,Rheumatology,Initial arthritis consultation,completed
+pat-005,2026-06-20,Dr. Sameer Khan,Pulmonology,Asthma follow-up,scheduled

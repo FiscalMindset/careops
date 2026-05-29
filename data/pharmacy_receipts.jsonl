@@ -1,5 +1,11 @@
 {"patient_id":"pat-001","date":"2026-03-16","medicine":"Sitagliptin 50 mg","quantity":"30 tablets","amount":"680.00","pharmacy":"GreenCross Pharmacy","receipt_file":"/demo/receipts/sitagliptin-mar.jpg"}
 {"patient_id":"pat-001","date":"2026-04-16","medicine":"Sitagliptin 50 mg","quantity":"30 tablets","amount":"680.00","pharmacy":"GreenCross Pharmacy","receipt_file":"/demo/receipts/sitagliptin-apr.jpg"}
 {"patient_id":"pat-001","date":"2026-05-01","medicine":"Metformin 500 mg","quantity":"60 tablets","amount":"145.00","pharmacy":"GreenCross Pharmacy","receipt_file":"/demo/receipts/metformin-may.jpg"}
+{"patient_id":"pat-001","date":"2026-05-15","medicine":"Atorvastatin 10 mg","quantity":"30 tablets","amount":"85.00","pharmacy":"GreenCross Pharmacy","receipt_file":"/demo/receipts/atorvastatin-may.jpg"}
 {"patient_id":"pat-002","date":"2026-04-09","medicine":"Amlodipine 5 mg","quantity":"30 tablets","amount":"92.00","pharmacy":"HealthHub Pharmacy","receipt_file":"/demo/receipts/amlodipine-apr.jpg"}
+{"patient_id":"pat-002","date":"2026-05-09","medicine":"Amlodipine 5 mg","quantity":"30 tablets","amount":"92.00","pharmacy":"HealthHub Pharmacy","receipt_file":"/demo/receipts/amlodipine-may.jpg"}
 {"patient_id":"pat-003","date":"2026-04-02","medicine":"Pantoprazole 40 mg","quantity":"21 tablets","amount":"180.00","pharmacy":"Metro Pharmacy","receipt_file":"/demo/receipts/pantoprazole-apr.jpg"}
+{"patient_id":"pat-004","date":"2026-05-05","medicine":"Meloxicam 7.5 mg","quantity":"30 tablets","amount":"210.00","pharmacy":"CareWell Pharmacy","receipt_file":"/demo/receipts/meloxicam-may.jpg"}
+{"patient_id":"pat-004","date":"2026-05-05","medicine":"Acetaminophen 500 mg","quantity":"100 tablets","amount":"45.00","pharmacy":"CareWell Pharmacy","receipt_file":"/demo/receipts/acetaminophen-may.jpg"}
+{"patient_id":"pat-005","date":"2026-05-01","medicine":"Fluticasone Inhaler 110 mcg","quantity":"1 inhaler","amount":"320.00","pharmacy":"BreatheEasy Pharmacy","receipt_file":"/demo/receipts/fluticasone-may.jpg"}
+{"patient_id":"pat-005","date":"2026-05-01","medicine":"Albuterol Inhaler 90 mcg","quantity":"1 inhaler","amount":"180.00","pharmacy":"BreatheEasy Pharmacy","receipt_file":"/demo/receipts/albuterol-may.jpg"}

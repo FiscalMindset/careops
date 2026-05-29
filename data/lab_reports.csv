@@ -2,5 +2,12 @@ patient_id,report_date,test_name,value,unit,reference_range,lab_name,file_path
 pat-001,2026-05-06,HbA1c,8.1,%,doctor target varies by patient,CityCare Labs,/demo/labs/pat-001-hba1c-may.pdf
 pat-001,2026-05-06,Fasting Glucose,154,mg/dL,70-99,CityCare Labs,/demo/labs/pat-001-fbg-may.pdf
 pat-001,2026-02-18,HbA1c,8.4,%,doctor target varies by patient,CityCare Labs,/demo/labs/pat-001-hba1c-feb.pdf
+pat-001,2026-02-18,Fasting Glucose,162,mg/dL,70-99,CityCare Labs,/demo/labs/pat-001-fbg-feb.pdf
 pat-002,2026-04-12,Creatinine,0.9,mg/dL,0.6-1.1,NorthPoint Diagnostics,/demo/labs/pat-002-creatinine.pdf
+pat-002,2026-04-12,Blood Pressure Systolic,142,mmHg,<130,NorthPoint Diagnostics,/demo/labs/pat-002-bp.pdf
 pat-003,2026-04-05,Hemoglobin,12.2,g/dL,13.5-17.5,Metro Labs,/demo/labs/pat-003-hb.pdf
+pat-003,2026-04-05,Potassium,4.1,mmol/L,3.5-5.1,Metro Labs,/demo/labs/pat-003-k.pdf
+pat-004,2026-05-15,C-Reactive Protein,4.8,mg/L,<3.0,Arthritis Diagnostics,/demo/labs/pat-004-crp.pdf
+pat-004,2026-05-15,Rheumatoid Factor,14,IU/mL,<20,Arthritis Diagnostics,/demo/labs/pat-004-rf.pdf
+pat-005,2026-05-08,FEV1,72,% predicted,>80,PulmoCare Labs,/demo/labs/pat-005-fev1.pdf
+pat-005,2026-05-08,Peak Flow,340,L/min,450-650,PulmoCare Labs,/demo/labs/pat-005-peakflow.pdf

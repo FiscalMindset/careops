@@ -41,7 +41,7 @@ async function main() {
     console.log(`Inserted ${rows.length} rows into ${tableName}`);
   };
 
-  // The custom specs expect table names like careops_patients_spec
+  // Tables for legacy _spec queries (SQLite fallback)
   insertTable("careops_patients_spec", data.patients);
   insertTable("careops_medications_spec", data.medications);
   insertTable("careops_lab_reports_spec", data.labReports);
@@ -51,6 +51,23 @@ async function main() {
   insertTable("careops_appointments_spec", data.appointments);
   insertTable("careops_prescription_ocr_spec", data.prescriptionOcr);
   insertTable("careops_family_notes_spec", data.familyNotes);
+
+  // Views matching Coral CLI naming (source.table) for SQLite compat
+  const coralViews: [string, string][] = [
+    ["careops_patients.patients", "careops_patients_spec"],
+    ["careops_medications.medications", "careops_medications_spec"],
+    ["careops_lab_reports.lab_reports", "careops_lab_reports_spec"],
+    ["careops_doctor_chats.doctor_chats", "careops_doctor_chats_spec"],
+    ["careops_pharmacy_receipts.pharmacy_receipts", "careops_pharmacy_receipts_spec"],
+    ["careops_symptom_logs.symptom_logs", "careops_symptom_logs_spec"],
+    ["careops_appointments.appointments", "careops_appointments_spec"],
+    ["careops_prescription_ocr.prescription_ocr", "careops_prescription_ocr_spec"],
+    ["careops_family_notes.family_notes", "careops_family_notes_spec"],
+  ];
+  for (const [viewName, sourceTable] of coralViews) {
+    db.exec(`CREATE VIEW IF NOT EXISTS "${viewName}" AS SELECT * FROM ${sourceTable}`);
+  }
+  console.log(`Created ${coralViews.length} Coral-compatible views.`);
 
   db.close();
   console.log("Database seeded successfully.");

@@ -1,6 +1,6 @@
 import type { JoinedEvidenceRow, TimelineEvent } from "@/types/careops";
 import { getPatientDataset } from "@/lib/data/load-careops-data";
-import { CAREOPS_JOIN_SQL } from "./queries";
+import { getCarePacketJoinQuery } from "./careops-queries";
 
 export async function runMockCoralJoin(patientId: string): Promise<JoinedEvidenceRow[]> {
   const data = await getPatientDataset(patientId);
@@ -130,6 +130,6 @@ export async function buildMockTimeline(patientId: string): Promise<TimelineEven
 
 export const mockCoralMeta = {
   mode: "mock",
-  sql: CAREOPS_JOIN_SQL,
+  sql: getCarePacketJoinQuery("pat-001"),
   note: "Mock Coral uses local CSV sources shaped like proposed Coral source specs."
 };

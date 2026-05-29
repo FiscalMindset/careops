@@ -4,3 +4,7 @@ pat-001,Sitagliptin,50 mg,once daily,2026-03-15,,prescription_ocr,Added at last 
 pat-001,Atorvastatin,10 mg,nightly,2025-08-20,,synthetic_patient_record,Listed in synthetic medication record.
 pat-002,Amlodipine,5 mg,once daily,2026-01-08,,doctor_chat,For blood pressure follow-up.
 pat-003,Pantoprazole,40 mg,once daily,2026-04-01,2026-04-21,discharge_summary,Short post-discharge course.
+pat-004,Meloxicam,7.5 mg,once daily,2026-02-01,,synthetic_patient_record,For osteoarthritis pain management.
+pat-004,Acetaminophen,500 mg,as needed,2026-01-15,,doctor_chat,Take for breakthrough pain max 3 per day.
+pat-005,Albuterol Inhaler,90 mcg,2 puffs as needed,2026-03-01,,synthetic_patient_record,For asthma symptom relief.
+pat-005,Fluticasone Inhaler,110 mcg,2 puffs twice daily,2026-03-01,,prescription_ocr,Maintenance inhaler for asthma control.

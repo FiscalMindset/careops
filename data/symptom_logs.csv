@@ -2,5 +2,11 @@ patient_id,date,symptom,severity,notes,related_medicine
 pat-001,2026-03-18,Mild nausea,2,Logged three days after Sitagliptin was added. Resolved by evening.,Sitagliptin
 pat-001,2026-04-02,Dizziness,3,Occurred before lunch; family noted missed breakfast.,Sitagliptin
 pat-001,2026-05-09,Fatigue,2,Afternoon tiredness after lab day.,Metformin
+pat-001,2026-05-20,Increased thirst,2,Noted over past week. Could be related to glucose levels.,Metformin
 pat-002,2026-04-17,Headache,2,Evening headache after long commute.,Amlodipine
+pat-002,2026-05-10,Dizziness on standing,2,Occasional when getting up quickly from seated position.,Amlodipine
 pat-003,2026-04-13,Stomach discomfort,3,Discuss at reconciliation visit.,Pantoprazole
+pat-004,2026-05-01,Morning stiffness,3,Lasts about 45 minutes after waking. Affects both knees and hands.,Meloxicam
+pat-004,2026-05-18,Knee pain,4,Right knee more painful after walking. Pain rating 4/5.,Acetaminophen
+pat-005,2026-05-12,Wheezing,3,Occurs at night. Albuterol provides relief for 2-3 hours.,Albuterol Inhaler
+pat-005,2026-05-22,Shortness of breath,3,After climbing stairs. Peak flow readings declining.,Fluticasone Inhaler

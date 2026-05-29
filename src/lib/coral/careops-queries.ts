@@ -7,7 +7,7 @@ export function getPatientProfileQuery(patientId: string): string {
 
 export function getCurrentMedicinesQuery(patientId: string): string {
   const m = Q("careops_medications", "medications");
-  return `SELECT medicine_name, dose, frequency, start_date, end_date, source, notes FROM ${m} WHERE patient_id = ${escapeId(patientId)} AND end_date IS NULL`;
+  return `SELECT medicine_name, dose, frequency, start_date, end_date, source, notes FROM ${m} WHERE patient_id = ${escapeId(patientId)} AND (end_date IS NULL OR end_date = '')`;
 }
 
 export function getRecentLabsQuery(patientId: string): string {
@@ -101,4 +101,25 @@ function escapeId(id: string): string {
     throw new Error(`Invalid patient ID: ${id}`);
   }
   return `'${id}'`;
+}
+
+const CORAL_SOURCES = [
+  "careops_patients",
+  "careops_medications",
+  "careops_lab_reports",
+  "careops_doctor_chats",
+  "careops_pharmacy_receipts",
+  "careops_symptom_logs",
+  "careops_appointments",
+  "careops_prescription_ocr",
+  "careops_family_notes",
+];
+
+export function translateForSqlite(sql: string): string {
+  let result = sql;
+  for (const src of CORAL_SOURCES) {
+    const pattern = `${src}\\.(\\w+)`;
+    result = result.replace(new RegExp(pattern, "g"), `"${src}.$1"`);
+  }
+  return result;
 }
