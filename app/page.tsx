@@ -3,8 +3,7 @@ import { loadCareOpsData } from "@/lib/data/load-careops-data";
 import { QueryInput } from "@/components/query-input";
 import { PatientSelector } from "@/components/patient-selector";
 import { ModeBadge, Badge, Card, PageHeader, SafetyNotice } from "@/components/ui";
-import { MermaidDiagram } from "@/components/mermaid-diagram";
-import { Terminal, CheckCircle, Database, Brain, BarChart3, Workflow } from "lucide-react";
+import { Terminal, CheckCircle, Database, Brain, BarChart3 } from "lucide-react";
 
 export default async function DashboardPage() {
   const data = await loadCareOpsData();
@@ -90,54 +89,6 @@ export default async function DashboardPage() {
           <div className="mt-4 flex items-center gap-2 text-xs text-purple-600"><Brain className="h-3.5 w-3.5" /> Ollama AI available for analysis</div>
         </Card>
       </div>
-
-      {/* Architecture Flow Diagram */}
-      <Card>
-        <div className="flex items-center gap-2 mb-4">
-          <Workflow className="h-5 w-5 text-info" />
-          <h3 className="text-lg font-semibold">Architecture Flow</h3>
-        </div>
-        <p className="text-sm text-muted mb-4">How a family caregiver question becomes a doctor-ready packet — from query input through Coral SQL joins to export.</p>
-        <MermaidDiagram
-          chart={`
-flowchart LR
-    User["Family Caregiver"] --> Ask["Query Input\n/ask a question"]
-    Ask --> CoralCLI["Coral CLI Client\ncoral-cli-client.ts"]
-    
-    subgraph Coral["Coral Query Engine"]
-        CoralCLI --> CSQL["coral sql --format json"]
-        CSQL --> Sources["9 Coral Source Specs"]
-    end
-    
-    Sources --> P1["careops_patients"]
-    Sources --> P2["careops_medications"]
-    Sources --> P3["careops_lab_reports"]
-    Sources --> P4["careops_doctor_chats"]
-    Sources --> P5["careops_pharmacy_receipts"]
-    Sources --> P6["careops_symptom_logs"]
-    Sources --> P7["careops_appointments"]
-    Sources --> P8["careops_prescription_ocr"]
-    Sources --> P9["careops_family_notes"]
-    
-    P1 --> JSONL["data/*.jsonl"]
-    P2 --> JSONL
-    P3 --> JSONL
-    P4 --> JSONL
-    P5 --> JSONL
-    P6 --> JSONL
-    P7 --> JSONL
-    P8 --> JSONL
-    P9 --> JSONL
-    
-    CSQL --> Result["Joined SQL Results"]
-    Result --> Agent["Packet Generator\ncareops-agent.ts"]
-    Agent --> Packet["Doctor Visit Packet"]
-    Packet --> Export["Export Markdown"]
-    Packet --> Evidence["SQL Evidence Panel"]
-          `}
-          title="End-to-End Query Flow"
-        />
-      </Card>
 
       <Card>
         <h3 className="text-lg font-semibold">Ask about a patient</h3>

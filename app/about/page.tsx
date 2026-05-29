@@ -149,16 +149,16 @@ flowchart LR
         CCLI["Coral CLI Client"]
         CSQL["coral sql --format json"]
     end
-    subgraph Sources["9 Data Sources"]
-        P1["patients"]
-        P2["medications"]
-        P3["lab_reports"]
-        P4["doctor_chats"]
-        P5["pharmacy_receipts"]
-        P6["symptom_logs"]
-        P7["appointments"]
-        P8["prescription_ocr"]
-        P9["family_notes"]
+    subgraph Sources["9 CareOps Sources"]
+        P1["patients\ndemographics"]
+        P2["medications\nprescriptions"]
+        P3["lab_reports\ntest results"]
+        P4["doctor_chats\ninstructions"]
+        P5["pharmacy_receipts\nrefills"]
+        P6["symptom_logs\ntracking"]
+        P7["appointments\ncalendar"]
+        P8["prescription_ocr\nscanned Rx"]
+        P9["family_notes\nobservations"]
     end
     subgraph Output["Output Layer"]
         PACKET["Doctor Visit Packet"]
@@ -208,6 +208,44 @@ flowchart LR
               <li><strong className="text-ink">Review SQL evidence</strong> — The Evidence page displays the exact Coral SQL queries and resulting data.</li>
               <li><strong className="text-ink">Export</strong> — Click &ldquo;Export markdown&rdquo; to download a printable doctor-ready document.</li>
             </ol>
+
+            <h4 className="font-semibold text-ink pt-4">End-to-End Query Flow</h4>
+            <p className="text-sm text-muted">How a family caregiver question becomes a doctor-ready packet — from query input through Coral SQL joins to export.</p>
+            <MermaidDiagram
+              chart={`
+flowchart LR
+    User["Family Caregiver"] --> Ask["Query Input\n/ask a question"]
+    Ask --> CoralCLI["Coral CLI Client\ncoral-cli-client.ts"]
+    subgraph Coral["Coral Query Engine"]
+        CoralCLI --> CSQL["coral sql --format json"]
+        CSQL --> Sources["9 Coral Source Specs\nregistered via coral source add"]
+    end
+    Sources --> P1["careops_patients\npatient demographics"]
+    Sources --> P2["careops_medications\nmedication records"]
+    Sources --> P3["careops_lab_reports\nlab test results"]
+    Sources --> P4["careops_doctor_chats\ndoctor instructions"]
+    Sources --> P5["careops_pharmacy_receipts\nrefill evidence"]
+    Sources --> P6["careops_symptom_logs\nsymptom tracking"]
+    Sources --> P7["careops_appointments\nappointment calendar"]
+    Sources --> P8["careops_prescription_ocr\nOCR prescriptions"]
+    Sources --> P9["careops_family_notes\ncaregiver notes"]
+    P1 --> JSONL["data/*.jsonl"]
+    P2 --> JSONL
+    P3 --> JSONL
+    P4 --> JSONL
+    P5 --> JSONL
+    P6 --> JSONL
+    P7 --> JSONL
+    P8 --> JSONL
+    P9 --> JSONL
+    CSQL --> Result["Joined SQL Results"]
+    Result --> Agent["Packet Generator\ncareops-agent.ts"]
+    Agent --> Packet["Doctor Visit Packet"]
+    Packet --> Export["Export Markdown"]
+    Packet --> Evidence["SQL Evidence Panel"]
+              `}
+              title="End-to-End Query Flow"
+            />
           </div>
         )}
 

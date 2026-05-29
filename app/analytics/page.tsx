@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import { Card, Badge, ModeBadge } from "@/components/ui";
 import {
-  BarChart3, Pill, Stethoscope, Activity, Calendar, MessageSquare,
-  FileText, AlertCircle, User, TrendingUp, Filter, Download,
-  ChevronDown, Search, RefreshCw, Loader2, Brain
+  Pill, Stethoscope, Activity, Calendar, MessageSquare,
+  FileText, User, TrendingUp, Loader2, Brain, Database, ClipboardList
 } from "lucide-react";
 
 type Patient = { patient_id: string; name: string; age: number; gender: string; condition_focus: string; primary_doctor: string };
@@ -41,9 +40,7 @@ type PatientAnalytics = {
   notes: NoteRow[];
 };
 
-type FilterView = "overview" | "medicines" | "labs" | "symptoms" | "appointments";
-
-const ENV_MODE = typeof process !== "undefined" && process.env.NEXT_PUBLIC_QUERY_MODE === "mock" ? "mock" : "coral_cli";
+type FilterView = "overview" | "medicines" | "labs" | "symptoms" | "appointments" | "data";
 
 function MiniBar({ value, max, color = "bg-info" }: { value: number; max: number; color?: string }) {
   const pct = max > 0 ? Math.min(100, (value / max) * 100) : 0;
@@ -59,45 +56,42 @@ function SeverityDot({ severity }: { severity: number }) {
   return <span className={`inline-block h-2.5 w-2.5 rounded-full ${colors[Math.min(severity - 1, 4)]}`} />;
 }
 
-async function loadPatientAnalytics(): Promise<PatientAnalytics[]> {
-  const data = await fetch("/api/query?q=analytics&patientId=pat-001").then((r) => r.json());
-  const patients: Patient[] = data.datasetStats?.patients ? [] : [];
-
-  const patientList: Patient[] = [];
+async function fetchRows(sql: string): Promise<any[]> {
   try {
-    const patientsResp = await fetch("/api/coral/run-query?sql=" + encodeURIComponent("SELECT patient_id, name, age, gender, condition_focus, primary_doctor FROM careops_patients.patients LIMIT 10"));
-    const patientsData = await patientsResp.json();
-    if (patientsData.rows) patientList.push(...patientsData.rows.map((r: any) => ({
-      patient_id: r[0], name: r[1], age: Number(r[2]), gender: r[3], condition_focus: r[4], primary_doctor: r[5]
-    })));
-  } catch {}
+    const resp = await fetch(`/api/coral/run-query?sql=${encodeURIComponent(sql)}`);
+    const data = await resp.json();
+    return data.rows || [];
+  } catch {
+    return [];
+  }
+}
+
+async function loadPatientAnalytics(): Promise<PatientAnalytics[]> {
+  const patientList: Patient[] = [];
+  const patientsData = await fetchRows("SELECT patient_id, name, age, gender, condition_focus, primary_doctor FROM careops_patients.patients LIMIT 10");
+  for (const r of patientsData) {
+    patientList.push({
+      patient_id: r.patient_id,
+      name: r.name,
+      age: Number(r.age),
+      gender: r.gender,
+      condition_focus: r.condition_focus,
+      primary_doctor: r.primary_doctor,
+    });
+  }
 
   const results: PatientAnalytics[] = [];
   for (const pt of patientList) {
     try {
-      const [medResp, labResp, symResp, chatResp, aptResp, recResp, noteResp] = await Promise.all([
-        fetch(`/api/coral/run-query?sql=${encodeURIComponent(`SELECT medicine_name, dose, frequency, start_date, end_date FROM careops_medications.medications WHERE patient_id = '${pt.patient_id}'`)}`).then(r => r.json()),
-        fetch(`/api/coral/run-query?sql=${encodeURIComponent(`SELECT report_date, test_name, value, unit, reference_range FROM careops_lab_reports.lab_reports WHERE patient_id = '${pt.patient_id}' ORDER BY report_date DESC`)}`).then(r => r.json()),
-        fetch(`/api/coral/run-query?sql=${encodeURIComponent(`SELECT date, symptom, severity, notes, related_medicine FROM careops_symptom_logs.symptom_logs WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`)}`).then(r => r.json()),
-        fetch(`/api/coral/run-query?sql=${encodeURIComponent(`SELECT date, doctor, message, instruction_type FROM careops_doctor_chats.doctor_chats WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`)}`).then(r => r.json()),
-        fetch(`/api/coral/run-query?sql=${encodeURIComponent(`SELECT appointment_date, doctor, speciality, reason, status FROM careops_appointments.appointments WHERE patient_id = '${pt.patient_id}' ORDER BY appointment_date DESC`)}`).then(r => r.json()),
-        fetch(`/api/coral/run-query?sql=${encodeURIComponent(`SELECT date, medicine, quantity, amount, pharmacy FROM careops_pharmacy_receipts.pharmacy_receipts WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`)}`).then(r => r.json()),
-        fetch(`/api/coral/run-query?sql=${encodeURIComponent(`SELECT date, note_author, note_text, priority FROM careops_family_notes.family_notes WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`)}`).then(r => r.json()),
+      const [medicines, labs, symptoms, chats, appointments, receipts, notes] = await Promise.all([
+        fetchRows(`SELECT medicine_name, dose, frequency, start_date, end_date FROM careops_medications.medications WHERE patient_id = '${pt.patient_id}'`) as Promise<MedicineRow[]>,
+        fetchRows(`SELECT report_date, test_name, value, unit, reference_range FROM careops_lab_reports.lab_reports WHERE patient_id = '${pt.patient_id}' ORDER BY report_date DESC`) as Promise<LabRow[]>,
+        fetchRows(`SELECT date, symptom, severity, notes, related_medicine FROM careops_symptom_logs.symptom_logs WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<SymptomRow[]>,
+        fetchRows(`SELECT date, doctor, message, instruction_type FROM careops_doctor_chats.doctor_chats WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<DoctorChatRow[]>,
+        fetchRows(`SELECT appointment_date, doctor, speciality, reason, status FROM careops_appointments.appointments WHERE patient_id = '${pt.patient_id}' ORDER BY appointment_date DESC`) as Promise<AppointmentRow[]>,
+        fetchRows(`SELECT date, medicine, quantity, amount, pharmacy FROM careops_pharmacy_receipts.pharmacy_receipts WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<ReceiptRow[]>,
+        fetchRows(`SELECT date, note_author, note_text, priority FROM careops_family_notes.family_notes WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<NoteRow[]>,
       ]);
-
-      const toRows = (resp: any) => resp.rows ? resp.rows.map((r: any[]) => {
-        const obj: any = {};
-        (resp.columns || []).forEach((c: string, i: number) => obj[c] = r[i]);
-        return obj;
-      }) : [];
-
-      const medicines: MedicineRow[] = toRows(medResp);
-      const labs: LabRow[] = toRows(labResp);
-      const symptoms: SymptomRow[] = toRows(symResp);
-      const chats: DoctorChatRow[] = toRows(chatResp);
-      const appointments: AppointmentRow[] = toRows(aptResp);
-      const receipts: ReceiptRow[] = toRows(recResp);
-      const notes: NoteRow[] = toRows(noteResp);
 
       const avgSeverity = symptoms.length ? Math.round(symptoms.reduce((s, x) => s + x.severity, 0) / symptoms.length * 10) / 10 : 0;
 
@@ -113,6 +107,29 @@ async function loadPatientAnalytics(): Promise<PatientAnalytics[]> {
   return results;
 }
 
+function DataTable({ rows, label }: { rows: any[]; label: string }) {
+  if (!rows.length) return <p className="text-sm text-muted py-4">No {label} records found.</p>;
+  const cols = Object.keys(rows[0]);
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="bg-surface border-b border-border">
+            {cols.map((c) => <th key={c} className="px-3 py-2 text-left font-medium text-muted capitalize whitespace-nowrap">{c.replace(/_/g, " ")}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={i} className="border-b border-border/50 hover:bg-surface/50">
+              {cols.map((c) => <td key={c} className="px-3 py-2 text-ink whitespace-nowrap">{String(row[c] ?? "")}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function AnalyticsPage() {
   const [patients, setPatients] = useState<PatientAnalytics[]>([]);
   const [selectedId, setSelectedId] = useState("");
@@ -126,10 +143,9 @@ export default function AnalyticsPage() {
       if (pts.length > 0) setSelectedId(pts[0].id);
       setLoading(false);
     });
-    fetch("/api/coral/run-query?sql=" + encodeURIComponent("SELECT name, size, family, parameter_size FROM ollama.models LIMIT 10"))
-      .then(r => r.json()).then(d => d.rows ? setOllamaModels(d.rows.map((r: any[]) => ({
-        name: r[0], size: r[1], family: r[2], params: r[3]
-      }))) : []).catch(() => {});
+    fetchRows("SELECT name, size, family, parameter_size FROM ollama.models LIMIT 10").then((rows) => {
+      setOllamaModels(rows);
+    }).catch(() => {});
   }, []);
 
   const pt = patients.find((p) => p.id === selectedId);
@@ -144,7 +160,7 @@ export default function AnalyticsPage() {
           <h2 className="text-3xl font-semibold tracking-tight text-ink">Care Operations Analytics</h2>
           <p className="mt-1 text-sm text-muted">Per-patient analysis with Coral SQL across 9 connected sources.</p>
         </div>
-        <ModeBadge mode={ENV_MODE} />
+        <ModeBadge mode="coral_cli" />
       </div>
 
       {loading ? (
@@ -162,7 +178,7 @@ export default function AnalyticsPage() {
 
           <Card>
             <div className="flex items-center gap-4">
-              <User className="h-5 w-5 text-info" />
+              <User className="h-5 w-5 text-info shrink-0" />
               <select
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
@@ -172,8 +188,8 @@ export default function AnalyticsPage() {
                   <option key={p.id} value={p.id}>{p.name} ({p.id}) — {p.condition}</option>
                 ))}
               </select>
-              <div className="flex gap-1">
-                {(["overview", "medicines", "labs", "symptoms", "appointments"] as FilterView[]).map((v) => (
+              <div className="flex gap-1 flex-wrap">
+                {(["overview", "medicines", "labs", "symptoms", "appointments", "data"] as FilterView[]).map((v) => (
                   <button key={v} onClick={() => setFilterView(v)}
                     className={`rounded-md px-3 py-2 text-xs font-medium capitalize ${filterView === v ? "bg-info text-white" : "bg-surface text-muted hover:text-ink"}`}
                   >{v}</button>
@@ -184,20 +200,50 @@ export default function AnalyticsPage() {
 
           {pt && (
             <>
-              <div className="grid gap-4 md:grid-cols-4">
-                <Card><div className="flex items-center gap-2"><Pill className="h-4 w-4 text-info" /><span className="text-sm font-medium">Medicines</span></div><p className="mt-1 text-2xl font-semibold">{pt.medicineCount}</p><p className="text-xs text-muted">{pt.activeMedicines} active</p></Card>
-                <Card><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4 text-info" /><span className="text-sm font-medium">Labs</span></div><p className="mt-1 text-2xl font-semibold">{pt.labCount}</p><p className="text-xs text-muted">{pt.labs.length > 0 ? pt.labs[0].report_date : "N/A"} latest</p></Card>
-                <Card><div className="flex items-center gap-2"><Activity className="h-4 w-4 text-info" /><span className="text-sm font-medium">Symptoms</span></div><p className="mt-1 text-2xl font-semibold">{pt.symptomCount}</p><p className="text-xs text-muted">Avg severity: {pt.avgSeverity}/5</p></Card>
-                <Card><div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-info" /><span className="text-sm font-medium">Appointments</span></div><p className="mt-1 text-2xl font-semibold">{pt.appointmentCount}</p><p className="text-xs text-muted">{pt.appointments.filter(a => a.status === "scheduled").length} upcoming</p></Card>
-              </div>
+              {filterView !== "data" && (
+                <>
+                  <div className="grid gap-4 md:grid-cols-4">
+                    <Card><div className="flex items-center gap-2"><Pill className="h-4 w-4 text-info" /><span className="text-sm font-medium">Medicines</span></div><p className="mt-1 text-2xl font-semibold">{pt.medicineCount}</p><p className="text-xs text-muted">{pt.activeMedicines} active</p></Card>
+                    <Card><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4 text-info" /><span className="text-sm font-medium">Labs</span></div><p className="mt-1 text-2xl font-semibold">{pt.labCount}</p><p className="text-xs text-muted">{pt.labs.length > 0 ? pt.labs[0].report_date : "N/A"} latest</p></Card>
+                    <Card><div className="flex items-center gap-2"><Activity className="h-4 w-4 text-info" /><span className="text-sm font-medium">Symptoms</span></div><p className="mt-1 text-2xl font-semibold">{pt.symptomCount}</p><p className="text-xs text-muted">Avg severity: {pt.avgSeverity}/5</p></Card>
+                    <Card><div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-info" /><span className="text-sm font-medium">Appointments</span></div><p className="mt-1 text-2xl font-semibold">{pt.appointmentCount}</p><p className="text-xs text-muted">{pt.appointments.filter(a => a.status === "scheduled").length} upcoming</p></Card>
+                  </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Card><div className="flex items-center gap-2"><MessageSquare className="h-4 w-4 text-info" /><span className="text-sm font-medium">Doctor Chats</span></div><p className="mt-1 text-2xl font-semibold">{pt.chatCount}</p><p className="text-xs text-muted">{pt.chats.filter(c => c.instruction_type === "medicine_change").length} medicine changes</p></Card>
-                <Card><div className="flex items-center gap-2"><FileText className="h-4 w-4 text-info" /><span className="text-sm font-medium">Records</span></div><p className="mt-1 text-2xl font-semibold">{pt.receiptCount + pt.noteCount}</p><p className="text-xs text-muted">{pt.receiptCount} receipts · {pt.noteCount} family notes</p></Card>
-              </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card><div className="flex items-center gap-2"><MessageSquare className="h-4 w-4 text-info" /><span className="text-sm font-medium">Doctor Chats</span></div><p className="mt-1 text-2xl font-semibold">{pt.chatCount}</p><p className="text-xs text-muted">{pt.chats.filter(c => c.instruction_type === "medicine_change").length} medicine changes</p></Card>
+                    <Card><div className="flex items-center gap-2"><FileText className="h-4 w-4 text-info" /><span className="text-sm font-medium">Records</span></div><p className="mt-1 text-2xl font-semibold">{pt.receiptCount + pt.noteCount}</p><p className="text-xs text-muted">{pt.receiptCount} receipts · {pt.noteCount} family notes</p></Card>
+                  </div>
+                </>
+              )}
 
-              {/* Patient detail cards based on filter */}
-              {pt.medicines.length > 0 && (filterView === "overview" || filterView === "medicines") && (
+              {filterView === "data" && (
+                <div className="space-y-4">
+                  <Card>
+                    <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><Database className="h-4 w-4 text-info" /> All Raw Data for {pt.name}</h3>
+                    <p className="text-xs text-muted mb-4">Every record across all 9 Coral sources for this patient.</p>
+                  </Card>
+                  {[
+                    { label: "Medications", icon: Pill, rows: pt.medicines },
+                    { label: "Lab Reports", icon: Stethoscope, rows: pt.labs },
+                    { label: "Symptoms", icon: Activity, rows: pt.symptoms },
+                    { label: "Doctor Chats", icon: MessageSquare, rows: pt.chats },
+                    { label: "Appointments", icon: Calendar, rows: pt.appointments },
+                    { label: "Pharmacy Receipts", icon: ClipboardList, rows: pt.receipts },
+                    { label: "Family Notes", icon: FileText, rows: pt.notes },
+                  ].map((section) => (
+                    <Card key={section.label}>
+                      <h4 className="font-semibold text-ink flex items-center gap-2 mb-3">
+                        <section.icon className="h-4 w-4 text-info" />
+                        {section.label}
+                        <Badge tone="neutral">{section.rows.length} records</Badge>
+                      </h4>
+                      <DataTable rows={section.rows} label={section.label} />
+                    </Card>
+                  ))}
+                </div>
+              )}
+
+              {pt.medicines.length > 0 && filterView === "medicines" && (
                 <Card>
                   <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><Pill className="h-4 w-4 text-info" /> Medicines</h3>
                   <div className="grid gap-3 md:grid-cols-2">
@@ -214,7 +260,7 @@ export default function AnalyticsPage() {
                 </Card>
               )}
 
-              {pt.labs.length > 0 && (filterView === "overview" || filterView === "labs") && (
+              {pt.labs.length > 0 && filterView === "labs" && (
                 <Card>
                   <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><Stethoscope className="h-4 w-4 text-info" /> Lab Results</h3>
                   <div className="space-y-3">
@@ -228,7 +274,7 @@ export default function AnalyticsPage() {
                 </Card>
               )}
 
-              {pt.symptoms.length > 0 && (filterView === "overview" || filterView === "symptoms") && (
+              {pt.symptoms.length > 0 && filterView === "symptoms" && (
                 <Card>
                   <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><Activity className="h-4 w-4 text-info" /> Symptom Timeline</h3>
                   <div className="space-y-2">
@@ -243,7 +289,7 @@ export default function AnalyticsPage() {
                 </Card>
               )}
 
-              {pt.appointments.length > 0 && (filterView === "overview" || filterView === "appointments") && (
+              {pt.appointments.length > 0 && filterView === "appointments" && (
                 <Card>
                   <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><Calendar className="h-4 w-4 text-info" /> Appointments</h3>
                   <div className="space-y-2">
@@ -257,44 +303,64 @@ export default function AnalyticsPage() {
                 </Card>
               )}
 
-              {/* Cross-patient comparison */}
               {filterView === "overview" && (
-                <Card>
-                  <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><TrendingUp className="h-4 w-4 text-info" /> Patient Comparison</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
-                      <thead><tr className="bg-surface border-b border-border">
-                        <th className="px-3 py-2 text-left font-medium text-muted">Patient</th>
-                        <th className="px-3 py-2 text-left font-medium text-muted">Condition</th>
-                        <th className="px-3 py-2 text-right font-medium text-muted">Medicines</th>
-                        <th className="px-3 py-2 text-right font-medium text-muted">Labs</th>
-                        <th className="px-3 py-2 text-right font-medium text-muted">Symptoms</th>
-                        <th className="px-3 py-2 text-right font-medium text-muted">Avg Severity</th>
-                        <th className="px-3 py-2 text-right font-medium text-muted">Appointments</th>
-                        <th className="px-3 py-2 text-right font-medium text-muted">Chats</th>
-                        <th className="px-3 py-2 text-right font-medium text-muted">Receipts</th>
-                      </tr></thead>
-                      <tbody>
-                        {patients.map((p) => {
-                          const maxMed = Math.max(...patients.map(x => x.medicineCount), 1);
-                          return (
-                            <tr key={p.id} className={`border-b border-border/50 hover:bg-surface/50 cursor-pointer ${p.id === selectedId ? "bg-blue-50" : ""}`} onClick={() => setSelectedId(p.id)}>
-                              <td className="px-3 py-2 font-medium text-ink">{p.name}</td>
-                              <td className="px-3 py-2 text-muted">{p.condition}</td>
-                              <td className="px-3 py-2 text-right"><MiniBar value={p.medicineCount} max={maxMed} color="bg-blue-500" /><span className="text-xs">{p.medicineCount}</span></td>
-                              <td className="px-3 py-2 text-right">{p.labCount}</td>
-                              <td className="px-3 py-2 text-right">{p.symptomCount}</td>
-                              <td className="px-3 py-2 text-right">{p.avgSeverity}</td>
-                              <td className="px-3 py-2 text-right">{p.appointmentCount}</td>
-                              <td className="px-3 py-2 text-right">{p.chatCount}</td>
-                              <td className="px-3 py-2 text-right">{p.receiptCount}</td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </Card>
+                <>
+                  {/* Cross-patient comparison */}
+                  <Card>
+                    <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><TrendingUp className="h-4 w-4 text-info" /> Patient Comparison</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-xs">
+                        <thead><tr className="bg-surface border-b border-border">
+                          <th className="px-3 py-2 text-left font-medium text-muted">Patient</th>
+                          <th className="px-3 py-2 text-left font-medium text-muted">Condition</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Medicines</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Labs</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Symptoms</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Avg Severity</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Appointments</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Chats</th>
+                          <th className="px-3 py-2 text-right font-medium text-muted">Receipts</th>
+                        </tr></thead>
+                        <tbody>
+                          {patients.map((p) => {
+                            const maxMed = Math.max(...patients.map(x => x.medicineCount), 1);
+                            return (
+                              <tr key={p.id} className={`border-b border-border/50 hover:bg-surface/50 cursor-pointer ${p.id === selectedId ? "bg-blue-50" : ""}`} onClick={() => setSelectedId(p.id)}>
+                                <td className="px-3 py-2 font-medium text-ink">{p.name}</td>
+                                <td className="px-3 py-2 text-muted">{p.condition}</td>
+                                <td className="px-3 py-2 text-right"><MiniBar value={p.medicineCount} max={maxMed} color="bg-blue-500" /><span className="text-xs">{p.medicineCount}</span></td>
+                                <td className="px-3 py-2 text-right">{p.labCount}</td>
+                                <td className="px-3 py-2 text-right">{p.symptomCount}</td>
+                                <td className="px-3 py-2 text-right">{p.avgSeverity}</td>
+                                <td className="px-3 py-2 text-right">{p.appointmentCount}</td>
+                                <td className="px-3 py-2 text-right">{p.chatCount}</td>
+                                <td className="px-3 py-2 text-right">{p.receiptCount}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </Card>
+
+                  {/* Data Source Breakdown */}
+                  <Card>
+                    <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><Database className="h-4 w-4 text-info" /> Data Source Breakdown</h3>
+                    <div className="grid gap-3 md:grid-cols-3">
+                      {[
+                        { label: "Medical", sources: ["careops_patients", "careops_medications", "careops_lab_reports", "careops_prescription_ocr"], count: pt.medicineCount + pt.labCount },
+                        { label: "Communications", sources: ["careops_doctor_chats", "careops_family_notes"], count: pt.chatCount + pt.noteCount },
+                        { label: "Operations", sources: ["careops_pharmacy_receipts", "careops_appointments", "careops_symptom_logs"], count: pt.receiptCount + pt.appointmentCount + pt.symptomCount },
+                      ].map((g) => (
+                        <div key={g.label} className="rounded-lg border border-border p-3">
+                          <p className="text-sm font-medium text-ink">{g.label}</p>
+                          <p className="mt-1 text-2xl font-semibold">{g.count}</p>
+                          <p className="text-xs text-muted">{g.sources.join(", ")}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                </>
               )}
 
               {/* Ollama Models Card */}
@@ -310,33 +376,13 @@ export default function AnalyticsPage() {
                     {ollamaModels.map((m, i) => (
                       <div key={i} className="rounded-lg border border-purple-100 bg-purple-50 p-3">
                         <p className="text-sm font-medium text-ink">{m.name}</p>
-                        <p className="text-xs text-muted">{m.family} · {m.params} · {(m.size / 1e9).toFixed(1)}GB</p>
+                        <p className="text-xs text-muted">{m.family} · {m.parameter_size} · {(m.size / 1e9).toFixed(1)}GB</p>
                       </div>
                     ))}
                   </div>
                 </Card>
               )}
             </>
-          )}
-
-          {/* Cross-source analysis */}
-          {pt && (
-            <Card>
-              <h3 className="font-semibold text-ink flex items-center gap-2 mb-3"><FileText className="h-4 w-4 text-info" /> Data Source Breakdown</h3>
-              <div className="grid gap-3 md:grid-cols-3">
-                {[
-                  { label: "Medical", sources: ["careops_patients", "careops_medications", "careops_lab_reports", "careops_prescription_ocr"], count: pt.medicineCount + pt.labCount },
-                  { label: "Communications", sources: ["careops_doctor_chats", "careops_family_notes"], count: pt.chatCount + pt.noteCount },
-                  { label: "Operations", sources: ["careops_pharmacy_receipts", "careops_appointments", "careops_symptom_logs"], count: pt.receiptCount + pt.appointmentCount + pt.symptomCount },
-                ].map((g) => (
-                  <div key={g.label} className="rounded-lg border border-border p-3">
-                    <p className="text-sm font-medium text-ink">{g.label}</p>
-                    <p className="mt-1 text-2xl font-semibold">{g.count}</p>
-                    <p className="text-xs text-muted">{g.sources.join(", ")}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
           )}
         </>
       )}

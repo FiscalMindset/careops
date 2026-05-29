@@ -11,7 +11,7 @@ flowchart TD
     UI["Next.js UI"] --> API["Next.js API Routes"]
     API --> Client["Coral CLI Client\n(src/lib/coral/coral-cli-client.ts)"]
     Client --> CLI["coral sql (--format json)"]
-    CLI --> Sources["9 Registered CareOps Coral Sources\n(coral source add --file)"]
+    CLI --> Sources["9 CareOps Coral Sources\npatients (demographics), medications,\n lab_reports, doctor_chats,\n pharmacy_receipts, symptom_logs,\n appointments, prescription_ocr,\n family_notes (caregiver notes)"]
     Sources --> JSONL["JSONL Synthetic Care Records\n(data/*.jsonl)"]
     CLI --> Result["Joined SQL Result"]
     Result --> Agent["CareOps Packet Generator"]
