@@ -1,5 +1,5 @@
 import type { TimelineEvent } from "@/types/careops";
-import { AlertTriangle, CheckCircle2, Download, FileSearch, ShieldCheck } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Download, FileSearch, ShieldCheck, Terminal, Database } from "lucide-react";
 
 export function PageHeader({ title, eyebrow, children }: { title: string; eyebrow?: string; children?: React.ReactNode }) {
   return (
@@ -24,6 +24,12 @@ export function Badge({ children, tone = "info" }: { children: React.ReactNode; 
     neutral: "bg-slate-50 text-slate-700 border-slate-200"
   };
   return <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${styles[tone]}`}>{children}</span>;
+}
+
+export function ModeBadge({ mode }: { mode?: string }) {
+  if (mode === "mock") return <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700"><Terminal className="h-3 w-3" />Mock Data</span>;
+  if (mode === "sqlite") return <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700"><Database className="h-3 w-3" />SQLite</span>;
+  return <span className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700"><Terminal className="h-3 w-3" />Real Coral CLI</span>;
 }
 
 export function SafetyNotice() {

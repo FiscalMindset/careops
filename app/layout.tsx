@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClipboardList, Database, FileText, Home, Info, Layers, UserRound, CalendarClock } from "lucide-react";
+import { BarChart3, ClipboardList, Database, FileText, Home, Info, Layers, UserRound, CalendarClock } from "lucide-react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const nav = [
   { href: "/", label: "Dashboard", icon: Home },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/data-sources", label: "Data Sources", icon: Database },
   { href: "/patients", label: "Patient", icon: UserRound },
   { href: "/timeline", label: "Timeline", icon: CalendarClock },

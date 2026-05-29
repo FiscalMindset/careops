@@ -123,7 +123,7 @@ function DataTable({ rows, max = 20 }: { rows: Record<string, any>[]; max?: numb
   );
 }
 
-export function QueryInput({ patientId: defaultPid = "pat-001" }: { patientId?: string }) {
+export function QueryInput({ patientId: defaultPid = "pat-001", showPatientInput = true }: { patientId?: string; showPatientInput?: boolean }) {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<QueryResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -203,13 +203,15 @@ export function QueryInput({ patientId: defaultPid = "pat-001" }: { patientId?: 
             placeholder='Ask a question... e.g. "Prepare a doctor visit packet for Raman Mehta"'
             className="flex-1 rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-muted focus:border-info focus:outline-none focus:ring-1 focus:ring-info"
           />
-          <input
-            type="text"
-            value={selectedPid}
-            onChange={(e) => setSelectedPid(e.target.value)}
-            placeholder="Patient ID"
-            className="w-32 rounded-lg border border-border bg-white px-3 py-3 text-sm text-ink placeholder:text-muted focus:border-info focus:outline-none focus:ring-1 focus:ring-info"
-          />
+          {showPatientInput && (
+            <input
+              type="text"
+              value={selectedPid}
+              onChange={(e) => setSelectedPid(e.target.value)}
+              placeholder="Patient ID"
+              className="w-32 rounded-lg border border-border bg-white px-3 py-3 text-sm text-ink placeholder:text-muted focus:border-info focus:outline-none focus:ring-1 focus:ring-info"
+            />
+          )}
         </div>
         <button
           type="submit"
