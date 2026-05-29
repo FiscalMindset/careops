@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://coral.co/logo.svg" alt="Coral Logo" width="120" height="120" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/4e/Healthcare_Symbol.png'"/>
   <h1 style="color: #0f172a; margin-bottom: 0;">CareOps Agent</h1>
   <p style="font-size: 1.2rem; color: #2563eb; font-weight: 500;">A Coral-powered family care coordination first mate</p>
 </div>
@@ -60,15 +59,45 @@ Coral is central to this application. CareOps relies on joining **9 disparate da
 
 ```mermaid
 flowchart TD
-    UI["Next.js UI"] --> API["Next.js API Routes"]
-    API --> Client["Coral CLI Client\n(coral-cli-client.ts)"]
-    Client --> CLI["coral sql --format json"]
-    CLI --> Sources["9 CareOps Sources\npatients, medications, lab_reports,\n doctor_chats, pharmacy_receipts,\n symptom_logs, appointments,\n prescription_ocr, family_notes"]
-    Sources --> JSONL["data/*.jsonl"]
+    subgraph App["CareOps Application"]
+        UI["Next.js UI"] --> API["Next.js API Routes"]
+        API --> Client["Coral CLI Client\n(coral-cli-client.ts)"]
+        Client --> CLI["coral sql --format json"]
+    end
+
+    subgraph Coral["Coral Query Layer"]
+        CLI --> JOIN["Cross-Source JOIN\n(patient_id key)"]
+        JOIN --> PAT["careops_patients\npatient demographics"]
+        JOIN --> MED["careops_medications\nmedication records"]
+        JOIN --> LAB["careops_lab_reports\nlab test results"]
+        JOIN --> CHAT["careops_doctor_chats\ndoctor instructions"]
+        JOIN --> PHARM["careops_pharmacy_receipts\nrefill evidence"]
+        JOIN --> SYMP["careops_symptom_logs\nsymptom tracking"]
+        JOIN --> APPT["careops_appointments\nappointment calendar"]
+        JOIN --> OCR["careops_prescription_ocr\nOCR prescriptions"]
+        JOIN --> NOTES["careops_family_notes\ncaregiver notes"]
+    end
+
+    subgraph Storage["Data Backend"]
+        MED --> JSONL["data/*.jsonl\n73 records across 9 files"]
+        LAB --> JSONL
+        CHAT --> JSONL
+        PHARM --> JSONL
+        SYMP --> JSONL
+        APPT --> JSONL
+        OCR --> JSONL
+        NOTES --> JSONL
+        PAT --> JSONL
+    end
+
     CLI --> Result["Joined SQL Result"]
     Result --> Agent["CareOps Packet Generator"]
     Agent --> Packet["Doctor Visit Packet"]
     Packet --> Evidence["SQL Evidence Panel"]
+
+    style PAT fill:#e0f2fe,stroke:#0284c7
+    style JOIN fill:#f0fdf4,stroke:#15803d
+    style JSONL fill:#fef2f2,stroke:#b91c1c
 ```
 
 ### Tech Stack
