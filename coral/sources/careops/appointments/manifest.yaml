@@ -1,0 +1,38 @@
+name: careops_appointments
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Upcoming and past medical appointment records
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT doctor, speciality, reason, status FROM careops_appointments.appointments LIMIT 3
+  - SELECT COUNT(*) AS apt_count FROM careops_appointments.appointments
+tables:
+  - name: appointments
+    description: Medical appointment calendar
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "appointments.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: appointment_date
+        type: Utf8
+        description: Appointment date (ISO format)
+      - name: doctor
+        type: Utf8
+        description: Doctor name
+      - name: speciality
+        type: Utf8
+        description: Medical speciality
+      - name: reason
+        type: Utf8
+        description: Reason for visit
+      - name: status
+        type: Utf8
+        description: Appointment status (scheduled/completed)

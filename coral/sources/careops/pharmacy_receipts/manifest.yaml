@@ -1,0 +1,41 @@
+name: careops_pharmacy_receipts
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Pharmacy refill and purchase evidence records
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT medicine, quantity, pharmacy FROM careops_pharmacy_receipts.pharmacy_receipts LIMIT 3
+  - SELECT COUNT(*) AS receipt_count FROM careops_pharmacy_receipts.pharmacy_receipts
+tables:
+  - name: pharmacy_receipts
+    description: Pharmacy refill and purchase receipts
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "pharmacy_receipts.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: date
+        type: Utf8
+        description: Purchase or refill date
+      - name: medicine
+        type: Utf8
+        description: Medicine name and strength dispensed
+      - name: quantity
+        type: Utf8
+        description: Quantity dispensed (e.g. 30 tablets)
+      - name: amount
+        type: Utf8
+        description: Total cost in INR
+      - name: pharmacy
+        type: Utf8
+        description: Pharmacy name
+      - name: receipt_file
+        type: Utf8
+        description: Path to receipt image file

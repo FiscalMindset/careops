@@ -5,3 +5,7 @@ coverage
 careops.db
 exports/*.md
 !exports/.gitkeep
+*.pdf
+.DS_Store
+._*
+graphify-out/

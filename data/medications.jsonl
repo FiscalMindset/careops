@@ -1,0 +1,5 @@
+{"patient_id":"pat-001","medicine_name":"Metformin","dose":"500 mg","frequency":"twice daily","start_date":"2025-12-10","end_date":"","source":"synthetic_patient_record","notes":"Continue with meals as instructed."}
+{"patient_id":"pat-001","medicine_name":"Sitagliptin","dose":"50 mg","frequency":"once daily","start_date":"2026-03-15","end_date":"","source":"prescription_ocr","notes":"Added at last diabetes follow-up."}
+{"patient_id":"pat-001","medicine_name":"Atorvastatin","dose":"10 mg","frequency":"nightly","start_date":"2025-08-20","end_date":"","source":"synthetic_patient_record","notes":"Listed in synthetic medication record."}
+{"patient_id":"pat-002","medicine_name":"Amlodipine","dose":"5 mg","frequency":"once daily","start_date":"2026-01-08","end_date":"","source":"doctor_chat","notes":"For blood pressure follow-up."}
+{"patient_id":"pat-003","medicine_name":"Pantoprazole","dose":"40 mg","frequency":"once daily","start_date":"2026-04-01","end_date":"2026-04-21","source":"discharge_summary","notes":"Short post-discharge course."}

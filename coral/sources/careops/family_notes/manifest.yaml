@@ -1,0 +1,35 @@
+name: careops_family_notes
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Family caregiver notes providing context and observations
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT note_author, priority FROM careops_family_notes.family_notes LIMIT 3
+  - SELECT COUNT(*) AS notes_count FROM careops_family_notes.family_notes
+tables:
+  - name: family_notes
+    description: Free-text notes from family caregivers
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "family_notes.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: date
+        type: Utf8
+        description: Note entry date
+      - name: note_author
+        type: Utf8
+        description: Family member who wrote the note
+      - name: note_text
+        type: Utf8
+        description: Note content
+      - name: priority
+        type: Utf8
+        description: Priority level (high/normal)

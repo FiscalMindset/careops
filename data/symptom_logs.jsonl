@@ -1,0 +1,5 @@
+{"patient_id":"pat-001","date":"2026-03-18","symptom":"Mild nausea","severity":"2","notes":"Logged three days after Sitagliptin was added. Resolved by evening.","related_medicine":"Sitagliptin"}
+{"patient_id":"pat-001","date":"2026-04-02","symptom":"Dizziness","severity":"3","notes":"Occurred before lunch; family noted missed breakfast.","related_medicine":"Sitagliptin"}
+{"patient_id":"pat-001","date":"2026-05-09","symptom":"Fatigue","severity":"2","notes":"Afternoon tiredness after lab day.","related_medicine":"Metformin"}
+{"patient_id":"pat-002","date":"2026-04-17","symptom":"Headache","severity":"2","notes":"Evening headache after long commute.","related_medicine":"Amlodipine"}
+{"patient_id":"pat-003","date":"2026-04-13","symptom":"Stomach discomfort","severity":"3","notes":"Discuss at reconciliation visit.","related_medicine":"Pantoprazole"}

@@ -1,0 +1,27 @@
+# Validation Checklist
+
+- [x] App runs locally (`npm run dev`)
+- [x] Mock Coral mode works without API keys
+- [x] Patient demo generates doctor visit packet (pat-001, diabetes follow-up)
+- [x] Timeline joins 5+ sources (medications, labs, symptoms, doctor chats, pharmacy)
+- [x] UI shows Coral SQL evidence
+- [x] Export generates markdown packet
+- [x] Tests pass (7/7)
+- [x] README detailed and polished
+- [x] `docs/API_KEYS.md` exists
+- [x] `docs/COMMANDS.md` exists
+- [x] `docs/SPECS.md` exists with examples
+- [x] `docs/CONTRIBUTING.md` exists
+- [x] `docs/SCRIPT.md` exists
+- [x] `docs/ARCHITECTURE.md` exists with Mermaid diagrams
+- [x] `docs/ISSUES.md` and PR-style docs exist
+- [x] `docs/RUN_PROJECT.md` exists
+- [x] `AGENT_HANDOFF/` exists
+- [x] `video_demo/` exists
+- [x] Safety disclaimer visible in UI and README
+- [x] No real patient data used
+- [x] No secret keys committed
+- [x] `npm run build` works
+- [x] `npm run test` works
+- [x] `npm run export:packet` works
+- [x] Implementation log updated

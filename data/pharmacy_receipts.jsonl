@@ -1,0 +1,5 @@
+{"patient_id":"pat-001","date":"2026-03-16","medicine":"Sitagliptin 50 mg","quantity":"30 tablets","amount":"680.00","pharmacy":"GreenCross Pharmacy","receipt_file":"/demo/receipts/sitagliptin-mar.jpg"}
+{"patient_id":"pat-001","date":"2026-04-16","medicine":"Sitagliptin 50 mg","quantity":"30 tablets","amount":"680.00","pharmacy":"GreenCross Pharmacy","receipt_file":"/demo/receipts/sitagliptin-apr.jpg"}
+{"patient_id":"pat-001","date":"2026-05-01","medicine":"Metformin 500 mg","quantity":"60 tablets","amount":"145.00","pharmacy":"GreenCross Pharmacy","receipt_file":"/demo/receipts/metformin-may.jpg"}
+{"patient_id":"pat-002","date":"2026-04-09","medicine":"Amlodipine 5 mg","quantity":"30 tablets","amount":"92.00","pharmacy":"HealthHub Pharmacy","receipt_file":"/demo/receipts/amlodipine-apr.jpg"}
+{"patient_id":"pat-003","date":"2026-04-02","medicine":"Pantoprazole 40 mg","quantity":"21 tablets","amount":"180.00","pharmacy":"Metro Pharmacy","receipt_file":"/demo/receipts/pantoprazole-apr.jpg"}

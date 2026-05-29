@@ -1,3 +1,5 @@
+process.env.NEXT_PUBLIC_USE_MOCK_CORAL = process.env.NEXT_PUBLIC_USE_MOCK_CORAL || "true";
+process.env.DATABASE_URL = process.env.DATABASE_URL || "file:./careops.db";
 import { generateDoctorVisitPacket } from "../src/lib/agent/careops-agent";
 import { writePacketMarkdown } from "../src/lib/export/markdown";
 

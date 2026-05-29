@@ -1,22 +1,35 @@
 # CareOps Agent Issue Plan
 
-This project uses local issue and PR-style documents because no GitHub remote is configured in this workspace and nothing should be pushed without explicit permission.
+This project tracks work via GitHub Issues and local PR-style docs in `docs/prs/`.
 
-| Issue | Branch | Scope | Commit message |
-| --- | --- | --- | --- |
-| #1 Project setup and design system | `feature/01-project-setup` | Next.js, TypeScript, Tailwind, route shell, reusable UI primitives | `feat: scaffold careops app shell and design system` |
-| #2 Seed synthetic care dataset | `feature/02-seed-data` | Synthetic CSV sources for patients, meds, labs, chats, OCR, receipts, symptoms, appointments, notes | `feat: add synthetic care coordination dataset` |
-| #3 Coral/mock Coral source layer | `feature/03-coral-layer` | Coral client abstraction, mock query engine, typed data loader | `feat: add coral query abstraction and mock source layer` |
-| #4 Custom care source specs | `feature/04-custom-specs` | Document proposed CareOps Coral source specs | `docs: add custom careops coral source specs` |
-| #5 Care timeline UI | `feature/05-care-timeline-ui` | Joined timeline view across records | `feat: add cross-source care timeline` |
-| #6 Doctor packet builder | `feature/06-packet-builder` | Agent packet module and packet generation UI | `feat: generate safe doctor visit packets` |
-| #7 Coral SQL evidence panel | `feature/07-evidence-panel` | SQL query display, sources, joined rows, confidence labels | `feat: expose coral sql evidence panel` |
-| #8 Export markdown packet | `feature/08-markdown-export` | Markdown export route and CLI export | `feat: export doctor packet markdown` |
-| #9 Tests and validation | `feature/09-tests-validation` | Vitest coverage for data, joins, safety, export | `test: cover careops data and packet workflows` |
-| #10 Documentation and demo script | `feature/10-docs-demo` | README, architecture, commands, API keys, video script, agent handoff | `docs: polish hackathon submission materials` |
+## Issue Tracking
 
-## GitHub Notes
+GitHub Issues: https://github.com/FiscalMindset/careops/issues
 
-- `gh` issue/PR creation is intentionally not attempted because this workspace has no initialized repository or remote.
-- Local PR-style summaries live under `docs/prs`.
-- The README lists custom Coral specs that are not currently available in the real Coral table list and can be contributed upstream.
+## Feature History
+
+| # | Branch | Scope | Status |
+|---|--------|-------|--------|
+| 1 | `feature/01-project-setup` | Next.js, TypeScript, Tailwind, route shell, reusable UI primitives | ✅ Merged |
+| 2 | `feature/02-seed-data` | Synthetic CSV sources for patients, meds, labs, chats, OCR, receipts, symptoms, appointments, notes | ✅ Merged |
+| 3 | `feature/03-coral-layer` | Coral client abstraction, mock query engine, typed data loader | ✅ Merged |
+| 4 | `feature/04-custom-specs` | Document proposed CareOps Coral source specs | ✅ Merged |
+| 5 | `feature/05-care-timeline-ui` | Joined timeline view across records | ✅ Merged |
+| 6 | `feature/06-packet-builder` | Agent packet module and packet generation UI | ✅ Merged |
+| 7 | `feature/07-evidence-panel` | SQL query display, sources, joined rows, confidence labels | ✅ Merged |
+| 8 | `feature/08-markdown-export` | Markdown export route and CLI export | ✅ Merged |
+| 9 | `feature/09-tests-validation` | Vitest coverage for data, joins, safety, export | ✅ Merged |
+| 10 | `feature/10-docs-demo` | README, architecture, commands, API keys, video script, agent handoff | ✅ Merged |
+| 11 | `feature/11-agent-handoff` | AGENT_HANDOFF/ and AGENT_STATUS/ with audit, status, guide | ✅ Merged |
+| 12 | `feature/12-video-demo` | video_demo/ with 8-scene storyboard, styles, script | ✅ Merged |
+| 13 | `feature/13-coral-cli-migration` | Real Coral CLI integration: coral-cli-client, careops-queries, 9 JSONL manifests | ✅ Merged |
+| 14 | `feature/14-interactive-sources` | Interactive data-sources page with CLI buttons, timeline rewrite, source-action API | ✅ Merged |
+
+## Local PR Docs
+
+PR-style summaries are kept in `docs/prs/` for reference. Each covers:
+- **Summary**: What the PR does and why
+- **Files Changed**: Key files and their purpose
+- **Tests Run**: Verification steps
+- **Coral Relevance**: How Coral is involved
+- **Safety Notes**: Any safety considerations

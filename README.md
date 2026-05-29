@@ -4,104 +4,198 @@
   <p style="font-size: 1.2rem; color: #2563eb; font-weight: 500;">A Coral-powered family care coordination first mate</p>
 </div>
 
+<div align="center">
+
+[![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/FiscalMindset/careops)
+[![Tests](https://img.shields.io/badge/tests-16%2F16-brightgreen)](https://github.com/FiscalMindset/careops)
+[![Coral](https://img.shields.io/badge/Coral-v0.2.0-blue)](https://github.com/withcoral/coral)
+[![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=next.js)](https://nextjs.org/)
+[![Hackathon](https://img.shields.io/badge/Coral-Hackathon%20Track%202-8b5cf6)](https://coral.co)
+
+</div>
+
 ---
 
-<div style="background-color: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #d9e1e8; margin-bottom: 2rem;">
-  <h2 style="color: #0f172a; margin-top: 0;">🩺 The Problem</h2>
-  <p style="color: #64748b; line-height: 1.6;">
-    When managing care for an aging parent or loved one, records are scattered everywhere. You have doctor instructions in WhatsApp, lab reports in PDFs, prescriptions in photos, and symptoms tracked in notes apps. When you walk into a follow-up appointment, doctors waste 10 minutes just trying to piece together the timeline. 
-  </p>
-</div>
+> [!IMPORTANT]
+> **CareOps is Coral-first.** The app uses real Coral CLI execution (`coral sql`) as its default query engine — 9 registered JSONL-backed Coral sources, cross-source JOINs, and a doctor-ready packet generated from Coral results. SQLite/mock modes exist only as fallback for testing.
 
-<div style="background-color: #f0fdf4; padding: 1.5rem; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 2rem;">
-  <h2 style="color: #15803d; margin-top: 0;">💡 The Solution: CareOps</h2>
-  <p style="color: #166534; line-height: 1.6;">
-    CareOps Agent helps families prepare for doctor visits by turning scattered care records into one clean, doctor-ready packet. <strong>It joins medical records, prescription photos, lab reports, doctor chat instructions, pharmacy receipts, and symptom logs using Coral.</strong> The output is a safe care timeline and a 1-page summary to hand to the doctor.
-  </p>
-</div>
+## 🩺 The Problem
+
+When managing care for an aging parent or loved one, records are scattered everywhere. Doctor instructions in WhatsApp, lab reports in PDFs, prescriptions in photos, symptoms in notes apps. When you walk into a follow-up appointment, doctors waste 10 minutes just trying to piece together the timeline.
+
+## 💡 The Solution: CareOps
+
+CareOps joins medical records, prescription photos, lab reports, doctor chat instructions, pharmacy receipts, and symptom logs using **Coral SQL**. It generates a clean, doctor-ready packet with a unified timeline, missing record detection, and questions for the doctor.
 
 > [!WARNING]
 > **Safety Boundary**: CareOps does NOT diagnose, prescribe, or provide medical advice. It only organizes records, builds timelines, detects missing records, and generates questions to ask a licensed medical professional.
 
+## 🆕 What's New
+
+| Feature | Description |
+|---------|-------------|
+| **Interactive Data Sources** | `/data-sources` is now a live client component with clickable Lint / Add / Test / Query buttons that run real Coral CLI commands per source |
+| **Live Source Status** | Each source card shows registration status (Not Registered → Lint OK → Registered → Tests Passed) fetched from `coral source list` on mount |
+| **Execution History** | Every CLI action is logged per source with timestamp, stdout, stderr, and success/failure |
+| **Timeline Rewrite** | `/timeline` now queries 7 Coral sources in parallel using `careops-queries.ts` templates instead of the old broken `TIMELINE_QUERY` with `_spec` tables |
+| **Coral CLI Client** | New `coral-cli-client.ts` with `runCoralSql`, `runCoralSourceLint`, `runCoralSourceAdd`, `runCoralSourceTest`, `runCoralSourceList` |
+| **Source Action API** | `POST /api/coral/source-action` supports `lint`, `add`, `test`, `query` per source |
+| **16 tests** | 7 careops + 9 coral-cli tests, all passing |
+
 ## 🌊 Why Coral? (Track 2)
 
-Coral is central to this application. CareOps relies on joining **9 disparate data sources** (patients, medications, labs, chats, pharmacy, symptoms, appointments, OCR, and family notes). 
+Coral is central to this application. CareOps relies on joining **9 disparate data sources** through a single SQL interface.
 
-Instead of writing complex application-level map-reduce logic, CareOps uses the **Coral MCP (Model Context Protocol)** to run cross-source SQL queries. Coral abstracts the silos, allowing the agent to write a single `SELECT ... LEFT JOIN` query to pull a unified patient timeline.
+| Layer | Implementation |
+|-------|----------------|
+| Source specs | Real Coral manifests (`coral/sources/careops/{spec}/manifest.yaml`) |
+| Data backend | JSONL through Coral (`backend: jsonl`) |
+| Query engine | `coral sql --format json` via Coral CLI v0.2.0 |
+| App API | `CoralClient` → `coral-cli-client.ts` (safe `execFile` wrapper) |
+| Packet generation | 10+ real `coral sql` calls assembled into a doctor-ready packet |
+| SQLite | Fallback/cache only |
+| Mock | Tests/offline only |
 
-## 🏛️ Architecture
+### Architecture
 
 ```mermaid
 flowchart TD
-    User["User: Family caregiver"] --> UI["CareOps Web App (Next.js)"]
-    UI --> Agent["CareOps Agent"]
-    Agent --> Coral["Coral MCP / SQL Layer"]
-
-    Coral --> Patients["careops_patients_spec"]
-    Coral --> Meds["careops_medications_spec"]
-    Coral --> Labs["careops_lab_reports_spec"]
-    Coral --> Chats["careops_doctor_chats_spec"]
-    Coral --> Pharmacy["careops_pharmacy_receipts_spec"]
-    Coral --> Symptoms["careops_symptom_logs_spec"]
-    Coral --> Appointments["careops_appointments_spec"]
-    Coral --> OCR["careops_prescription_ocr_spec"]
-
+    UI["Next.js UI"] --> API["Next.js API Routes"]
+    API --> Client["Coral CLI Client\n(coral-cli-client.ts)"]
+    Client --> CLI["coral sql --format json"]
+    CLI --> Sources["9 Registered CareOps Sources\n(coral source add --file)"]
+    Sources --> JSONL["data/*.jsonl"]
+    CLI --> Result["Joined SQL Result"]
+    Result --> Agent["CareOps Packet Generator"]
     Agent --> Packet["Doctor Visit Packet"]
-    Packet --> Timeline["Care Timeline"]
-    Packet --> Questions["Questions for Doctor"]
-    Packet --> Missing["Missing Records"]
-    Packet --> Export["Markdown/PDF Export"]
+    Packet --> Evidence["SQL Evidence Panel"]
 ```
+
+## 🪸 About Coral
+
+Coral is an open-source SQL-based abstraction layer over disparate data sources. Instead of writing multiple API clients, Coral lets you query all sources with SQL JOINs.
+
+**Coral repository**: https://github.com/withcoral/coral
+
+### CareOps Coral Sources
+
+9 custom Coral source specs are registered with the real Coral CLI:
+
+| Source | Table | Format | Rows | Status |
+|--------|-------|--------|------|--------|
+| `careops_patients` | patients | JSONL | 3 | ✅ 2/2 tests pass |
+| `careops_medications` | medications | JSONL | 5 | ✅ 2/2 tests pass |
+| `careops_lab_reports` | lab_reports | JSONL | 5 | ✅ 2/2 tests pass |
+| `careops_doctor_chats` | doctor_chats | JSONL | 5 | ✅ 2/2 tests pass |
+| `careops_pharmacy_receipts` | pharmacy_receipts | JSONL | 5 | ✅ 2/2 tests pass |
+| `careops_symptom_logs` | symptom_logs | JSONL | 5 | ✅ 2/2 tests pass |
+| `careops_appointments` | appointments | JSONL | 3 | ✅ 2/2 tests pass |
+| `careops_prescription_ocr` | prescription_ocr | JSONL | 3 | ✅ 2/2 tests pass |
+| `careops_family_notes` | family_notes | JSONL | 4 | ✅ 2/2 tests pass |
+
+**18/18 declared test queries pass** on registration.
 
 ## 🚀 Features
 
-- **Dashboard**: Professional healthcare aesthetic (white/black with minimal accents).
-- **Data Sources**: View all connected (simulated) specs.
-- **Care Timeline**: Chronological, Coral-joined timeline of all events.
-- **Doctor Visit Packet Builder**: Generates the 1-page visit summary.
-- **Coral SQL Evidence Panel**: Fully transparent UI showing exactly which sources and SQL queries were used.
-- **Export**: Download the packet as Markdown.
-- **Mock Mode**: Fully runnable locally via SQLite simulating the Coral MCP.
+- **Dashboard**: Coral runtime status card showing mode, sources, and connection status
+- **Interactive Data Sources**: 9 source cards with clickable CLI actions (lint → add → test → query) and live execution logs
+- **Coral SQL Evidence Panel**: Verify Sources / Run Live Query / Generate Packet — all via real `coral sql`
+- **Doctor Visit Packet Builder**: 10+ Coral SQL calls assembled into a 1-page visit summary
+- **Care Timeline**: Chronological timeline across 7 Coral sources, sorted by date
+- **Export**: Download the packet as Markdown
+- **Safety Guardrails**: Never diagnoses, prescribes, or recommends medicine changes
 
 ## 💻 Tech Stack
-- Next.js (App Router) + TypeScript
+
+- Next.js 15 (App Router) + TypeScript
 - Tailwind CSS + Lucide Icons
-- Node.js backend route handlers
-- local `better-sqlite3` (Mock Coral layer)
+- **Coral CLI v0.2.0** — real query engine
+- `better-sqlite3` — test/fallback only
 - Vitest
 
-## 🛠️ Setup Instructions
+## 🛠️ Setup
 
-1. **Clone & Install**
-   ```bash
-   git clone https://github.com/FiscalMindset/careops.git
-   cd careops
-   npm install
-   ```
+### Prerequisites
 
-2. **Environment**
-   ```bash
-   cp .env.example .env.local
-   ```
-   *(Ensure `NEXT_PUBLIC_USE_MOCK_CORAL=true` is set for local testing without API keys)*
+- Node.js 18+
+- npm
+- Coral CLI v0.2.0+ (`npm install -g @withcoral/cli`)
 
-3. **Seed Database**
-   ```bash
-   npm run seed
-   ```
+### Quick Start
 
-4. **Run App**
-   ```bash
-   npm run dev
-   ```
+```bash
+# 1. Clone and install
+git clone https://github.com/FiscalMindset/careops.git
+cd careops
+npm install
 
-See `/docs/COMMANDS.md` and `/docs/API_KEYS.md` for full details.
+# 2. Verify Coral CLI
+coral --version
+
+# 3. Register all 9 Coral sources
+coral source add --file coral/sources/careops/patients/manifest.yaml
+coral source add --file coral/sources/careops/medications/manifest.yaml
+coral source add --file coral/sources/careops/lab_reports/manifest.yaml
+coral source add --file coral/sources/careops/doctor_chats/manifest.yaml
+coral source add --file coral/sources/careops/pharmacy_receipts/manifest.yaml
+coral source add --file coral/sources/careops/symptom_logs/manifest.yaml
+coral source add --file coral/sources/careops/appointments/manifest.yaml
+coral source add --file coral/sources/careops/prescription_ocr/manifest.yaml
+coral source add --file coral/sources/careops/family_notes/manifest.yaml
+
+# 4. Start the app (Coral CLI mode — default)
+npm run dev
+```
+
+### Quick Registration Script
+
+```bash
+for f in coral/sources/careops/*/manifest.yaml; do
+  coral source add --file "$f"
+done
+```
+
+### Alternative Modes
+
+```bash
+# SQLite fallback (requires: npm run seed first)
+CAREOPS_QUERY_MODE=sqlite npm run dev
+
+# Mock mode (for tests only)
+CAREOPS_QUERY_MODE=mock npm run dev
+```
+
+## 🧪 Testing
+
+```bash
+npm test              # Unit tests (vitest) — 16 tests
+npm run test:coral    # Coral integration tests — real coral sql
+```
 
 ## 📸 Demo Workflow
-1. Navigate to `/packet`.
-2. See the auto-generated "Diabetes Follow-up" packet.
-3. Review the **Coral SQL Evidence** section to see the raw join query.
-4. Export the packet.
+
+1. `npm run dev` → open http://localhost:3000
+2. `/data-sources` → click Lint → Add → Test → Query on any source to see real Coral CLI in action
+3. `/evidence` → click "Verify Coral Sources" to see `coral source list` output
+4. Click "Run Live Coral Query" to execute a cross-source JOIN
+5. Click "Generate Packet from Coral" to see the full 10-query pipeline
+6. `/packet` → select patient + purpose, generate a doctor-ready packet
+7. Export as Markdown
+
+## 🔧 Configuration
+
+| Env Var | Default | Description |
+|---------|---------|-------------|
+| `CAREOPS_QUERY_MODE` | `coral_cli` | `coral_cli`, `sqlite`, or `mock` |
+| `CORAL_CLI_PATH` | `coral` | Path to Coral CLI binary |
+| `CORAL_CLI_TIMEOUT` | `20000` | Timeout (ms) for Coral CLI calls |
+| `DATABASE_URL` | `file:./careops.db` | SQLite database path (fallback mode) |
+
+## ⚠️ Known Coral CLI Limitations
+
+- `backend: file` is **not supported** in v0.2.0 — use `backend: jsonl` instead
+- `format` property in table definitions causes errors with `jsonl` backend — omit it
+- Template variables (`{{input.DATA_PATH}}`) are **not resolved** when using `coral source add --file` — hardcode absolute paths in manifests
 
 ## 🧑‍💻 About Me
 

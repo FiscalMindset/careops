@@ -1,0 +1,44 @@
+name: careops_lab_reports
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Lab test results including HbA1c, glucose, and other clinical observations
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT test_name, value, unit, report_date FROM careops_lab_reports.lab_reports LIMIT 3
+  - SELECT COUNT(*) AS lab_count FROM careops_lab_reports.lab_reports
+tables:
+  - name: lab_reports
+    description: Clinical lab test results
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "lab_reports.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: report_date
+        type: Utf8
+        description: Lab collection or report date
+      - name: test_name
+        type: Utf8
+        description: Lab test name (e.g. HbA1c, Fasting Glucose)
+      - name: value
+        type: Utf8
+        description: Test result value
+      - name: unit
+        type: Utf8
+        description: Unit of measurement
+      - name: reference_range
+        type: Utf8
+        description: Normal reference range
+      - name: lab_name
+        type: Utf8
+        description: Performing laboratory
+      - name: file_path
+        type: Utf8
+        description: Path to the lab report PDF

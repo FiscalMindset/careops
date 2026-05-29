@@ -98,10 +98,10 @@ export function MissingRecordAlert({ records }: { records: string[] }) {
 
 export function SQLQueryBlock({ sql }: { sql: string }) {
   return (
-    <Card className="bg-slate-950 text-white">
-      <div className="mb-3 flex items-center gap-2 text-sm font-medium text-blue-100"><FileSearch className="h-4 w-4" /> Coral SQL query</div>
-      <pre className="text-xs leading-5 text-slate-100">{sql}</pre>
-    </Card>
+    <div className="rounded-lg border border-slate-700 bg-slate-950 p-5 shadow-panel">
+      <div className="mb-3 flex items-center gap-2 text-sm font-medium text-blue-300"><FileSearch className="h-4 w-4" /> Coral SQL query</div>
+      <pre className="text-xs leading-5 text-slate-200">{sql}</pre>
+    </div>
   );
 }
 

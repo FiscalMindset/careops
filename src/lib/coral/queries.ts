@@ -34,6 +34,8 @@ WHERE m.patient_id = ?
 ORDER BY m.start_date DESC, l.report_date DESC, s.date DESC;
 `;
 
+export const CAREOPS_JOIN_SQL = DOCTOR_VISIT_PACKET_QUERY;
+
 export const PATIENT_SUMMARY_QUERY = `
 SELECT 
   p.patient_id, 

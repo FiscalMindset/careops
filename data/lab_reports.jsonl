@@ -1,0 +1,5 @@
+{"patient_id":"pat-001","report_date":"2026-05-06","test_name":"HbA1c","value":"8.1","unit":"%","reference_range":"doctor target varies by patient","lab_name":"CityCare Labs","file_path":"/demo/labs/pat-001-hba1c-may.pdf"}
+{"patient_id":"pat-001","report_date":"2026-05-06","test_name":"Fasting Glucose","value":"154","unit":"mg/dL","reference_range":"70-99","lab_name":"CityCare Labs","file_path":"/demo/labs/pat-001-fbg-may.pdf"}
+{"patient_id":"pat-001","report_date":"2026-02-18","test_name":"HbA1c","value":"8.4","unit":"%","reference_range":"doctor target varies by patient","lab_name":"CityCare Labs","file_path":"/demo/labs/pat-001-hba1c-feb.pdf"}
+{"patient_id":"pat-002","report_date":"2026-04-12","test_name":"Creatinine","value":"0.9","unit":"mg/dL","reference_range":"0.6-1.1","lab_name":"NorthPoint Diagnostics","file_path":"/demo/labs/pat-002-creatinine.pdf"}
+{"patient_id":"pat-003","report_date":"2026-04-05","test_name":"Hemoglobin","value":"12.2","unit":"g/dL","reference_range":"13.5-17.5","lab_name":"Metro Labs","file_path":"/demo/labs/pat-003-hb.pdf"}

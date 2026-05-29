@@ -1,0 +1,43 @@
+name: careops_doctor_chats
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Doctor instructions parsed from secure messaging or visit summaries
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT doctor, instruction_type, medicine_mentioned FROM careops_doctor_chats.doctor_chats LIMIT 3
+  - SELECT COUNT(*) AS chat_count FROM careops_doctor_chats.doctor_chats
+tables:
+  - name: doctor_chats
+    description: Secure messages and visit instructions from doctors
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "doctor_chats.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: date
+        type: Utf8
+        description: Message or instruction date
+      - name: doctor
+        type: Utf8
+        description: Doctor name
+      - name: message
+        type: Utf8
+        description: Full instruction text
+      - name: instruction_type
+        type: Utf8
+        description: Category (medicine_change, safety_instruction, visit_preparation, monitoring)
+      - name: medicine_mentioned
+        type: Utf8
+        nullable: true
+        description: Medicine referenced in the instruction
+      - name: followup_date
+        type: Utf8
+        nullable: true
+        description: Recommended follow-up date

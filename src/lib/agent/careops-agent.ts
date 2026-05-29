@@ -1,4 +1,4 @@
-import type { DoctorVisitPacket } from "@/types/careops";
+import type { DoctorVisitPacket, JoinedEvidenceRow } from "@/types/careops";
 import { getPatientDataset } from "@/lib/data/load-careops-data";
 import { CoralClient } from "@/lib/coral/client";
 import { DOCTOR_VISIT_PACKET_QUERY } from "@/lib/coral/queries";
@@ -12,18 +12,18 @@ export async function generateDoctorVisitPacket(patientId: string, visitPurpose:
     throw new Error(`No synthetic patient found for id ${patientId}`);
   }
 
-  // Use Coral Client for cross-source join evidence
   const coral = new CoralClient();
-  let coralResult;
-  let evidenceRows: Record<string, any>[] = [];
+  let evidenceRows: JoinedEvidenceRow[] = [];
   try {
-    coralResult = await coral.executeQuery(DOCTOR_VISIT_PACKET_QUERY, [patientId]);
-    evidenceRows = coralResult.rows.map(rowArray => {
-      const obj: Record<string, any> = {};
-      coralResult.columns.forEach((col: string, i: number) => obj[col] = rowArray[i]);
-      obj.confidence = "high"; // mock confidence
-      return obj;
-    });
+    const resp = await coral.executeQuery(DOCTOR_VISIT_PACKET_QUERY, [patientId]);
+    if (resp.result) {
+      evidenceRows = resp.result.rows.map((rowArray: any[]) => {
+        const obj: Record<string, any> = {};
+        resp.result!.columns.forEach((col: string, i: number) => obj[col] = rowArray[i]);
+        obj.confidence = "high";
+        return obj as JoinedEvidenceRow;
+      });
+    }
   } catch (err) {
     console.error("Failed to run coral query", err);
   }

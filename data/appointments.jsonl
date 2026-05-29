@@ -1,0 +1,3 @@
+{"patient_id":"pat-001","appointment_date":"2026-05-31","doctor":"Dr. Asha Iyer","speciality":"Endocrinology","reason":"Diabetes follow-up","status":"scheduled"}
+{"patient_id":"pat-002","appointment_date":"2026-06-10","doctor":"Dr. Vikram Sethi","speciality":"Cardiology","reason":"Hypertension review","status":"scheduled"}
+{"patient_id":"pat-003","appointment_date":"2026-05-20","doctor":"Dr. Nisha Rao","speciality":"Internal Medicine","reason":"Medication reconciliation","status":"completed"}

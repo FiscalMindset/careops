@@ -6,7 +6,7 @@ import { CoralClient } from "@/lib/coral/client";
 import { DOCTOR_VISIT_PACKET_QUERY, TIMELINE_QUERY } from "@/lib/coral/queries";
 
 beforeAll(() => {
-  process.env.NEXT_PUBLIC_USE_MOCK_CORAL = "true";
+  process.env.CAREOPS_QUERY_MODE = "sqlite";
   process.env.DATABASE_URL = "file:./careops.db";
 });
 
@@ -21,19 +21,18 @@ describe("CareOps data loading", () => {
 describe("Coral SQL query execution (Mock)", () => {
   it("joins medication, symptoms, labs, chats, and refills using SQLite", async () => {
     const coral = new CoralClient();
-    const result = await coral.executeQuery(DOCTOR_VISIT_PACKET_QUERY, ["pat-001"]);
-    expect(result.rows.length).toBeGreaterThan(0);
-    expect(result.columns).toContain("test_name");
+    const resp = await coral.executeQuery(DOCTOR_VISIT_PACKET_QUERY, ["pat-001"]);
+    expect(resp.result!.rows.length).toBeGreaterThan(0);
+    expect(resp.result!.columns).toContain("test_name");
   });
 });
 
 describe("Patient timeline join", () => {
   it("builds a timeline with multiple source types", async () => {
     const coral = new CoralClient();
-    const result = await coral.executeQuery(TIMELINE_QUERY, ["pat-001", "pat-001", "pat-001", "pat-001", "pat-001"]);
-    
-    // Column 0 is 'type'
-    const types = new Set(result.rows.map((row) => row[0]));
+    const resp = await coral.executeQuery(TIMELINE_QUERY, ["pat-001", "pat-001", "pat-001", "pat-001", "pat-001"]);
+
+    const types = new Set(resp.result!.rows.map((row: any[]) => row[0]));
     expect(types.size).toBeGreaterThanOrEqual(3);
     expect(types.has("lab")).toBe(true);
     expect(types.has("refill")).toBe(true);

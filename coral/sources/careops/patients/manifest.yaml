@@ -1,0 +1,38 @@
+name: careops_patients
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Patient demographics and medical focus records for care coordination
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT patient_id, name, age, condition_focus FROM careops_patients.patients LIMIT 3
+  - SELECT COUNT(*) AS patient_count FROM careops_patients.patients
+tables:
+  - name: patients
+    description: Patient demographic and summary records
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "patients.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Unique patient identifier
+      - name: name
+        type: Utf8
+        description: Patient full name
+      - name: age
+        type: Int64
+        description: Patient age in years
+      - name: gender
+        type: Utf8
+        description: Patient gender
+      - name: condition_focus
+        type: Utf8
+        description: Primary condition for the current care focus
+      - name: primary_doctor
+        type: Utf8
+        description: Primary care physician name

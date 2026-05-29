@@ -1,0 +1,38 @@
+name: careops_prescription_ocr
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: OCR-extracted prescription data from physical prescription images
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT extracted_medicines, doctor_name, prescription_date FROM careops_prescription_ocr.prescription_ocr LIMIT 3
+  - SELECT COUNT(*) AS ocr_count FROM careops_prescription_ocr.prescription_ocr
+tables:
+  - name: prescription_ocr
+    description: OCR-extracted text and parsed medicines from prescription images
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "prescription_ocr.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: image_file
+        type: Utf8
+        description: Path to the prescription image
+      - name: ocr_text
+        type: Utf8
+        description: Raw OCR-extracted text
+      - name: extracted_medicines
+        type: Utf8
+        description: Parsed medicine names from OCR
+      - name: doctor_name
+        type: Utf8
+        description: Prescribing doctor name
+      - name: prescription_date
+        type: Utf8
+        description: Date of prescription

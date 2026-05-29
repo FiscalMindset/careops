@@ -10,11 +10,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "seed": "tsx scripts/seed.ts",
-    "export:packet": "tsx scripts/export-packet.ts"
+    "export:packet": "tsx scripts/export-packet.ts",
+    "test:coral": "bash scripts/test-coral.sh"
   },
   "dependencies": {
     "better-sqlite3": "^12.10.0",
     "csv-parse": "^5.6.0",
+    "dotenv": "^17.4.2",
     "lucide-react": "^0.468.0",
     "next": "^15.0.4",
     "react": "^19.0.0",

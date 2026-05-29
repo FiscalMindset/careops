@@ -1,0 +1,45 @@
+name: careops_medications
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Current and historical medication records with dosage schedules
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT medicine_name, dose, frequency FROM careops_medications.medications LIMIT 3
+  - SELECT COUNT(*) AS med_count FROM careops_medications.medications
+tables:
+  - name: medications
+    description: Prescription medication records
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "medications.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: medicine_name
+        type: Utf8
+        description: Generic or brand medicine name
+      - name: dose
+        type: Utf8
+        description: Dosage strength (e.g. 500 mg)
+      - name: frequency
+        type: Utf8
+        description: Administration schedule
+      - name: start_date
+        type: Utf8
+        description: Medication start date (ISO format)
+      - name: end_date
+        type: Utf8
+        nullable: true
+        description: Medication end date if discontinued
+      - name: source
+        type: Utf8
+        description: Origin of this medication record
+      - name: notes
+        type: Utf8
+        description: Prescribing or clinical notes

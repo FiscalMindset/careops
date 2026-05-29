@@ -1,0 +1,38 @@
+name: careops_symptom_logs
+version: 0.1.0
+dsl_version: 3
+backend: jsonl
+description: Symptom history and severity logs tracked by family caregivers
+inputs:
+  DATA_PATH:
+    kind: variable
+    default: /Volumes/algsoch/careops/data
+    hint: Path to the data directory containing JSONL files
+test_queries:
+  - SELECT symptom, severity, related_medicine FROM careops_symptom_logs.symptom_logs LIMIT 3
+  - SELECT COUNT(*) AS symptom_count FROM careops_symptom_logs.symptom_logs
+tables:
+  - name: symptom_logs
+    description: Symptom tracking records with severity and medicine correlation
+    source:
+      location: "file:///Volumes/algsoch/careops/data/"
+      glob: "symptom_logs.jsonl"
+    columns:
+      - name: patient_id
+        type: Utf8
+        description: Foreign key to careops_patients
+      - name: date
+        type: Utf8
+        description: Date symptom was observed
+      - name: symptom
+        type: Utf8
+        description: Symptom description
+      - name: severity
+        type: Int64
+        description: Severity rating 1-5
+      - name: notes
+        type: Utf8
+        description: Additional context or observations
+      - name: related_medicine
+        type: Utf8
+        description: Medicine potentially related to this symptom

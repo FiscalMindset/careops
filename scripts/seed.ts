@@ -1,3 +1,5 @@
+process.env.NEXT_PUBLIC_USE_MOCK_CORAL = process.env.NEXT_PUBLIC_USE_MOCK_CORAL || "true";
+process.env.DATABASE_URL = process.env.DATABASE_URL || "file:./careops.db";
 import Database from "better-sqlite3";
 import fs from "fs";
 import { loadCareOpsData } from "../src/lib/data/load-careops-data";
