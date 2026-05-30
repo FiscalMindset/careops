@@ -200,17 +200,22 @@ export default function PacketPage() {
             <span className="text-sm font-medium text-ink">Query mode:</span>
           </div>
           <div className="flex overflow-hidden rounded-lg border border-border">
-            {(Object.entries(MODE_CONFIG) as [QueryMode, typeof MODE_CONFIG['coral_cli']][]).map(([key, cfg]) => (
+            {(Object.entries(MODE_CONFIG) as [QueryMode, typeof MODE_CONFIG['coral_cli']][]).map(([key, cfg]) => {
+              const activeMap: Record<string, string> = {
+                coral_cli: 'bg-green-50 text-green-700 border-b-2 border-green-500',
+                mock: 'bg-amber-50 text-amber-700 border-b-2 border-amber-500',
+                sqlite: 'bg-slate-50 text-slate-700 border-b-2 border-slate-500',
+              };
+              return (
               <button key={key} onClick={() => setMode(key)}
                 className={`px-3 py-2 text-xs font-medium transition-colors ${
-                  mode === key
-                    ? `bg-${cfg.tone === 'success' ? 'green' : cfg.tone === 'warning' ? 'amber' : 'slate'}-50 text-${cfg.tone === 'success' ? 'green' : cfg.tone === 'warning' ? 'amber' : 'slate'}-700 border-b-2 border-${cfg.tone === 'success' ? 'green' : cfg.tone === 'warning' ? 'amber' : 'slate'}-500`
-                    : 'bg-white text-muted hover:bg-surface'
+                  mode === key ? activeMap[key] : 'bg-white text-muted hover:bg-surface'
                 }`}
               >
                 {cfg.label}
               </button>
-            ))}
+              );
+            })}
           </div>
           <Badge tone={MODE_CONFIG[mode].tone}>{MODE_CONFIG[mode].label}</Badge>
         </div>

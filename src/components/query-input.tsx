@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Card, Badge, SafetyNotice } from "./ui";
 import {
   Search,
@@ -19,6 +21,9 @@ import {
   Stethoscope,
   MessageSquare,
   Pill,
+  Brain,
+  Copy,
+  Check,
 } from "lucide-react";
 
 type TabId = "answer" | "execution" | "sql" | "sources";
@@ -52,27 +57,33 @@ type QueryResponse = {
   familyNotes?: any[];
   missingRecords?: string[];
   questionsForDoctor?: string[];
+  aiAnswer?: string | null;
+  aiModel?: string | null;
+  aiProvider?: string | null;
+  aiError?: string | null;
   error?: string;
 };
 
-const SAMPLE_COMMANDS = [
-  { label: "Show all patients", command: "SELECT * FROM careops_patients.patients", patient: "pat-001" },
-  {
-    label: "Medications for Raman Mehta",
-    command: "SELECT * FROM careops_medications.medications WHERE patient_id = 'pat-001'",
-    patient: "pat-001",
-  },
-  {
-    label: "Prepare doctor visit packet",
-    command: "Generate packet for Raman Mehta diabetes follow-up",
-    patient: "pat-001",
-  },
-  {
-    label: "Symptom timeline for Leela Shah",
-    command: "SELECT * FROM careops_symptom_logs.symptom_logs WHERE patient_id = 'pat-002'",
-    patient: "pat-002",
-  },
-];
+function getSampleCommands(pid: string): { label: string; command: string; patient: string }[] {
+  return [
+    { label: "Show all patients", command: "SELECT * FROM careops_patients.patients", patient: "" },
+    {
+      label: "Show medications",
+      command: `SELECT * FROM careops_medications.medications WHERE patient_id = '${pid}'`,
+      patient: pid,
+    },
+    {
+      label: "Prepare visit packet",
+      command: `Generate a doctor visit packet for the patient`,
+      patient: pid,
+    },
+    {
+      label: "Symptom timeline",
+      command: `SELECT * FROM careops_symptom_logs.symptom_logs WHERE patient_id = '${pid}' ORDER BY date DESC`,
+      patient: pid,
+    },
+  ];
+}
 
 const TABS: { id: TabId; label: string; icon: any }[] = [
   { id: "answer", label: "Answer", icon: MessageSquare },
@@ -131,6 +142,18 @@ export function QueryInput({ patientId: defaultPid = "pat-001", showPatientInput
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [activeTab, setActiveTab] = useState<TabId>("answer");
   const [selectedPid, setSelectedPid] = useState(defaultPid);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setSelectedPid(defaultPid);
+  }, [defaultPid]);
+
+  const copyAnswer = useCallback(async () => {
+    if (!result?.aiAnswer) return;
+    await navigator.clipboard.writeText(result.aiAnswer);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [result?.aiAnswer]);
 
   const addLog = (entry: LogEntry) => setLogs((prev) => [...prev, entry]);
 
@@ -224,13 +247,13 @@ export function QueryInput({ patientId: defaultPid = "pat-001", showPatientInput
       </form>
 
       <div className="flex flex-wrap gap-2">
-        {SAMPLE_COMMANDS.map((cmd) => (
+        {getSampleCommands(selectedPid).map((cmd) => (
           <button
             key={cmd.label}
             onClick={() => {
               setQuery(cmd.command);
-              setSelectedPid(cmd.patient);
-              handleSubmit(cmd.command, cmd.patient);
+              if (cmd.patient) setSelectedPid(cmd.patient);
+              handleSubmit(cmd.command, cmd.patient || selectedPid);
             }}
             disabled={loading}
             className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-muted hover:border-info hover:text-info disabled:opacity-50"
@@ -306,7 +329,38 @@ export function QueryInput({ patientId: defaultPid = "pat-001", showPatientInput
                 </Card>
               )}
 
-              {result.summary && (
+              {result.aiAnswer && (
+                <Card className="border-info/20 bg-gradient-to-br from-blue-50 to-white">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-info/10">
+                      <Brain className="h-3.5 w-3.5 text-info" />
+                    </div>
+                    <h3 className="font-semibold text-ink">AI Answer</h3>
+                    {result.aiModel && (
+                      <Badge tone="info">{result.aiProvider === "groq" ? "Groq AI" : result.aiModel}</Badge>
+                    )}
+                    <button
+                      onClick={copyAnswer}
+                      className="ml-auto inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1 text-xs text-muted hover:text-ink hover:border-info"
+                      title="Copy answer"
+                    >
+                      {copied ? <Check className="h-3 w-3 text-success" /> : <Copy className="h-3 w-3" />}
+                      {copied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                  <div className="prose prose-sm max-w-none text-sm leading-7 text-ink">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {result.aiAnswer}
+                    </ReactMarkdown>
+                  </div>
+                  <p className="mt-4 text-xs text-muted border-t border-border/50 pt-3">
+                    Generated by {result.aiProvider === "groq" ? "Groq AI" : result.aiModel || "AI"} via Coral SQL.
+                    Please consult a doctor for medical decisions.
+                  </p>
+                </Card>
+              )}
+
+              {!result.aiAnswer && result.summary && (
                 <Card>
                   <div className="flex items-center gap-2 mb-2">
                     <FileSearch className="h-4 w-4 text-info" />

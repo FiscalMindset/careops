@@ -157,6 +157,12 @@ function TutorialSection({ onClose }: { onClose: () => void }) {
   );
 }
 
+const MODE_ACTIVE: Record<string, string> = {
+  coral_cli: 'bg-green-50 text-green-800 border-b-2 border-green-500',
+  mock: 'bg-amber-50 text-amber-800 border-b-2 border-amber-500',
+  sqlite: 'bg-slate-50 text-slate-800 border-b-2 border-slate-500',
+};
+
 function ModeToggle({ mode, onChange }: { mode: QueryMode; onChange: (m: QueryMode) => void }) {
   return (
     <Card>
@@ -169,9 +175,7 @@ function ModeToggle({ mode, onChange }: { mode: QueryMode; onChange: (m: QueryMo
           {(Object.entries(MODE_CONFIG) as [QueryMode, typeof MODE_CONFIG['coral_cli']][]).map(([key, cfg]) => (
             <button key={key} onClick={() => onChange(key)}
               className={`px-3 py-2 text-xs font-medium transition-colors ${
-                mode === key
-                  ? `bg-${cfg.tone === 'success' ? 'green' : cfg.tone === 'warning' ? 'amber' : 'slate'}-50 text-${cfg.tone === 'success' ? 'green' : cfg.tone === 'warning' ? 'amber' : 'slate'}-800 border-b-2 border-${cfg.tone === 'success' ? 'green' : cfg.tone === 'warning' ? 'amber' : 'slate'}-500`
-                  : 'bg-white text-muted hover:bg-surface'
+                mode === key ? MODE_ACTIVE[key] : 'bg-white text-muted hover:bg-surface'
               }`}
             >
               {cfg.label}
@@ -247,18 +251,18 @@ export default function EvidencePage() {
       {/* Action buttons */}
       <div className="grid gap-3 md:grid-cols-3">
         {[
-          { label: "Verify Coral Sources", desc: "Run coral source list", status: sourceStatus, onClick: verifySources, icon: Database, color: "blue" },
-          { label: "Run Live Coral Query", desc: "Execute cross-source JOIN", status: queryStatus, onClick: runQuery, icon: FileText, color: "green" },
-          { label: "Generate Packet from Coral", desc: "Full packet via coral sql", status: packetStatus, onClick: generatePacket, icon: RefreshCw, color: "purple" },
-        ].map(({ label, desc, status, onClick, icon: Icon, color }) => (
+          { label: "Verify Coral Sources", desc: "Run coral source list", status: sourceStatus, onClick: verifySources, icon: Database, bg: "bg-blue-100", iconColor: "text-info" },
+          { label: "Run Live Coral Query", desc: "Execute cross-source JOIN", status: queryStatus, onClick: runQuery, icon: FileText, bg: "bg-green-100", iconColor: "text-success" },
+          { label: "Generate Packet from Coral", desc: "Full packet via coral sql", status: packetStatus, onClick: generatePacket, icon: RefreshCw, bg: "bg-purple-100", iconColor: "text-purple-600" },
+        ].map(({ label, desc, status, onClick, icon: Icon, bg, iconColor }) => (
           <button key={label} onClick={onClick} disabled={status === "running"}
             className="group flex items-center gap-3 rounded-lg border border-border bg-white p-4 text-left hover:border-info hover:bg-blue-50/30 disabled:opacity-50 transition-colors"
           >
-            <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-${color}-100`}>
-              {status === "running" ? <Loader2 className={`h-5 w-5 animate-spin text-${color === 'purple' ? 'purple-600' : color}`} />
+            <div className={`flex h-10 w-10 items-center justify-center rounded-full ${bg}`}>
+              {status === "running" ? <Loader2 className="h-5 w-5 animate-spin text-info" />
                 : status === "success" ? <CheckCircle className="h-5 w-5 text-success" />
                 : status === "error" ? <XCircle className="h-5 w-5 text-danger" />
-                : <Icon className={`h-5 w-5 text-${color === 'blue' ? 'info' : color === 'green' ? 'success' : 'purple-600'}`} />}
+                : <Icon className={`h-5 w-5 ${iconColor}`} />}
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-ink">{label}</h3>

@@ -7,6 +7,7 @@ import {
   FileText, User, TrendingUp, Loader2, Brain, Database, ClipboardList
 } from "lucide-react";
 
+
 type Patient = { patient_id: string; name: string; age: number; gender: string; condition_focus: string; primary_doctor: string };
 type MedicineRow = { medicine_name: string; dose: string; frequency: string; start_date: string; end_date?: string };
 type LabRow = { report_date: string; test_name: string; value: string; unit: string; reference_range: string };
@@ -56,55 +57,14 @@ function SeverityDot({ severity }: { severity: number }) {
   return <span className={`inline-block h-2.5 w-2.5 rounded-full ${colors[Math.min(severity - 1, 4)]}`} />;
 }
 
-async function fetchRows(sql: string): Promise<any[]> {
+async function loadPatientAnalytics(): Promise<PatientAnalytics[]> {
   try {
-    const resp = await fetch(`/api/coral/run-query?sql=${encodeURIComponent(sql)}`);
+    const resp = await fetch("/api/analytics");
     const data = await resp.json();
-    return data.rows || [];
+    return data.patients || [];
   } catch {
     return [];
   }
-}
-
-async function loadPatientAnalytics(): Promise<PatientAnalytics[]> {
-  const patientList: Patient[] = [];
-  const patientsData = await fetchRows("SELECT patient_id, name, age, gender, condition_focus, primary_doctor FROM careops_patients.patients LIMIT 10");
-  for (const r of patientsData) {
-    patientList.push({
-      patient_id: r.patient_id,
-      name: r.name,
-      age: Number(r.age),
-      gender: r.gender,
-      condition_focus: r.condition_focus,
-      primary_doctor: r.primary_doctor,
-    });
-  }
-
-  const results: PatientAnalytics[] = [];
-  for (const pt of patientList) {
-    try {
-      const [medicines, labs, symptoms, chats, appointments, receipts, notes] = await Promise.all([
-        fetchRows(`SELECT medicine_name, dose, frequency, start_date, end_date FROM careops_medications.medications WHERE patient_id = '${pt.patient_id}'`) as Promise<MedicineRow[]>,
-        fetchRows(`SELECT report_date, test_name, value, unit, reference_range FROM careops_lab_reports.lab_reports WHERE patient_id = '${pt.patient_id}' ORDER BY report_date DESC`) as Promise<LabRow[]>,
-        fetchRows(`SELECT date, symptom, severity, notes, related_medicine FROM careops_symptom_logs.symptom_logs WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<SymptomRow[]>,
-        fetchRows(`SELECT date, doctor, message, instruction_type FROM careops_doctor_chats.doctor_chats WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<DoctorChatRow[]>,
-        fetchRows(`SELECT appointment_date, doctor, speciality, reason, status FROM careops_appointments.appointments WHERE patient_id = '${pt.patient_id}' ORDER BY appointment_date DESC`) as Promise<AppointmentRow[]>,
-        fetchRows(`SELECT date, medicine, quantity, amount, pharmacy FROM careops_pharmacy_receipts.pharmacy_receipts WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<ReceiptRow[]>,
-        fetchRows(`SELECT date, note_author, note_text, priority FROM careops_family_notes.family_notes WHERE patient_id = '${pt.patient_id}' ORDER BY date DESC`) as Promise<NoteRow[]>,
-      ]);
-
-      const avgSeverity = symptoms.length ? Math.round(symptoms.reduce((s, x) => s + x.severity, 0) / symptoms.length * 10) / 10 : 0;
-
-      results.push({
-        id: pt.patient_id, name: pt.name, age: pt.age, condition: pt.condition_focus, doctor: pt.primary_doctor,
-        medicineCount: medicines.length, labCount: labs.length, symptomCount: symptoms.length,
-        chatCount: chats.length, appointmentCount: appointments.length, receiptCount: receipts.length,
-        noteCount: notes.length, avgSeverity, activeMedicines: medicines.filter(m => !m.end_date || m.end_date === "").length,
-        medicines, labs, symptoms, chats, appointments, receipts, notes,
-      });
-    } catch {}
-  }
-  return results;
 }
 
 function DataTable({ rows, label }: { rows: any[]; label: string }) {
@@ -143,8 +103,8 @@ export default function AnalyticsPage() {
       if (pts.length > 0) setSelectedId(pts[0].id);
       setLoading(false);
     });
-    fetchRows("SELECT name, size, family, parameter_size FROM ollama.models LIMIT 10").then((rows) => {
-      setOllamaModels(rows);
+    fetch("/api/coral/run-query?sql=" + encodeURIComponent("SELECT name, size, family, parameter_size FROM ollama.models LIMIT 10")).then(r => r.json()).then(d => {
+      setOllamaModels(d.rows || []);
     }).catch(() => {});
   }, []);
 

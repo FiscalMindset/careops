@@ -96,7 +96,7 @@ ORDER BY m.start_date DESC, l.report_date DESC, s.date DESC;
 `.trim();
 }
 
-function escapeId(id: string): string {
+export function escapeId(id: string): string {
   if (!/^[a-zA-Z0-9_-]+$/.test(id)) {
     throw new Error(`Invalid patient ID: ${id}`);
   }

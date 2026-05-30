@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import { generateDoctorVisitPacket } from "@/lib/agent/careops-agent";
 import { loadCareOpsData } from "@/lib/data/load-careops-data";
 import { QueryInput } from "@/components/query-input";
 import { PatientSelector } from "@/components/patient-selector";
 import { ModeBadge, Badge, Card, PageHeader, SafetyNotice } from "@/components/ui";
 import { Terminal, CheckCircle, Database, Brain, BarChart3 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Dashboard — CareOps Agent",
+};
 
 export default async function DashboardPage() {
   const data = await loadCareOpsData();

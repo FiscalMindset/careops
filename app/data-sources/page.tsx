@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { loadCareOpsData } from "@/lib/data/load-careops-data";
 import fs from "fs";
 import { join } from "path";
 import DataSourcesClient from "./data-sources-client";
+
+export const metadata: Metadata = {
+  title: "Data Sources — CareOps Agent",
+};
 
 async function readManifest(dir: string): Promise<string | null> {
   try {

@@ -111,7 +111,7 @@ export function SQLQueryBlock({ sql }: { sql: string }) {
   );
 }
 
-export function ExportButton({ href = "/api/export?patientId=pat-001&purpose=diabetes%20follow-up" }: { href?: string }) {
+export function ExportButton({ href = "/api/export?list=true" }: { href?: string }) {
   return (
     <a className="inline-flex items-center gap-2 rounded-md bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800" href={href}>
       <Download className="h-4 w-4" />
