@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareOps Agent — Demo Video</title>
+  <meta name="description" content="CareOps Agent — Coral-powered family care coordination. Built by Vicky Kumar for Coral Hackathon Track 2." />
+  <meta property="og:title" content="CareOps Agent — Demo Video" />
+  <meta property="og:description" content="Coral-powered family care coordination. Built by Vicky Kumar for Coral Hackathon Track 2." />
+  <meta property="og:type" content="video.other" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Progress -->
+  <div class="progress"><div class="progress-bar"></div></div>
+
+  <!-- Watermark -->
+  <div class="watermark">Vicky Kumar · @FiscalMindset · github.com/FiscalMindset/careops</div>
+
+  <!-- Scene Nav -->
+  <nav class="scene-nav" aria-label="Scene navigation">
+    <button class="scene-dot active" data-scene="0" aria-label="Scene 1"></button>
+    <button class="scene-dot" data-scene="1" aria-label="Scene 2"></button>
+    <button class="scene-dot" data-scene="2" aria-label="Scene 3"></button>
+    <button class="scene-dot" data-scene="3" aria-label="Scene 4"></button>
+    <button class="scene-dot" data-scene="4" aria-label="Scene 5"></button>
+    <button class="scene-dot" data-scene="5" aria-label="Scene 6"></button>
+    <button class="scene-dot" data-scene="6" aria-label="Scene 7"></button>
+    <button class="scene-dot" data-scene="7" aria-label="Scene 8"></button>
+  </nav>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button id="prevScene" aria-label="Previous scene">&#8592;</button>
+    <button id="nextScene" aria-label="Next scene">&#8594;</button>
+  </div>
+
+  <!-- ── Scene 1: Intro ── -->
+  <section class="scene scene-intro" id="scene-intro">
+    <div class="scene-frame"></div>
+    <div class="scene-inner">
+      <img src="avatar.png" alt="FiscalMindset" class="intro-avatar" />
+      <h1 class="intro-title">CareOps Agent</h1>
+      <p class="intro-subtitle">Coral-powered family care coordination</p>
+      <p class="intro-creator">Built by Vicky Kumar &middot; <span>@FiscalMindset</span></p>
+      <p class="intro-repo">github.com/FiscalMindset/careops</p>
+      <div class="intro-badge">Coral Hackathon &middot; Track 2</div>
+    </div>
+  </section>
+
+  <!-- ── Scene 2: The Problem ── -->
+  <section class="scene scene-problem" id="scene-problem">
+    <div class="scene-frame"></div>
+    <div class="scene-inner">
+      <h2 class="problem-title">The Real Problem</h2>
+      <div class="problem-cards">
+        <div class="problem-card"><span class="icon">&#128172;</span> WhatsApp chat history</div>
+        <div class="problem-card"><span class="icon">&#128221;</span> Pharmacy receipts</div>
+        <div class="problem-card"><span class="icon">&#128196;</span> Lab report PDFs</div>
+        <div class="problem-card"><span class="icon">&#128197;</span> Appointment cards</div>
+        <div class="problem-card"><span class="icon">&#128200;</span> Symptom logs</div>
+        <div class="problem-card"><span class="icon">&#128137;</span> Prescriptions</div>
+        <div class="problem-card"><span class="icon">&#128140;</span> Family messages</div>
+      </div>
+      <p class="problem-chaos-text">Family care records scattered everywhere &rarr; no single source of truth</p>
+    </div>
+  </section>
+
+  <!-- ── Scene 3: Solution ── -->
+  <section class="scene scene-solution" id="scene-solution">
+    <div class="scene-frame"></div>
+    <div class="scene-inner">
+      <h2 class="solution-title">What CareOps Does</h2>
+      <p class="solution-sub">Turns scattered care records into a doctor-ready visit packet</p>
+      <div class="solution-flow">
+        <div class="sources-grid">
+          <div class="source-card">Doctor Chats</div>
+          <div class="source-card">Pharmacy Receipts</div>
+          <div class="source-card">Lab Reports</div>
+          <div class="source-card">Symptom Logs</div>
+          <div class="source-card">Appointments</div>
+          <div class="source-card">Prescription OCR</div>
+          <div class="source-card">Family Notes</div>
+          <div class="source-card">Medications</div>
+          <div class="source-card">Patients</div>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box">Coral SQL Layer</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box">Doctor Visit Packet</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Scene 4: Architecture ── -->
+  <section class="scene scene-arch" id="scene-arch">
+    <div class="scene-frame"></div>
+    <div class="scene-inner">
+      <h2 class="arch-title">Tech Stack &amp; Architecture</h2>
+      <p class="arch-sub">How CareOps is built</p>
+      <div class="arch-flow">
+        <div class="arch-node highlight">Next.js 15 + TypeScript + Tailwind</div>
+        <div class="arch-connector">&#8595;</div>
+        <div class="arch-node">CareOps Agent</div>
+        <div class="arch-connector">&#8595;</div>
+        <div class="arch-node highlight">Coral MCP &amp; Coral SQL</div>
+        <div class="arch-connector">&#8595;</div>
+        <div class="arch-node">SQLite / Synthetic Care Records</div>
+        <div class="arch-connector">&#8595;</div>
+        <div class="arch-node highlight">Doctor-Ready Packet</div>
+      </div>
+      <div class="stack-badges">
+        <span class="stack-badge">Next.js 15</span>
+        <span class="stack-badge">TypeScript</span>
+        <span class="stack-badge">Tailwind CSS</span>
+        <span class="stack-badge">Coral MCP</span>
+        <span class="stack-badge">Coral SQL</span>
+        <span class="stack-badge">better-sqlite3</span>
+        <span class="stack-badge">Vitest</span>
+        <span class="stack-badge">9 Coral Sources</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Scene 5: Real App Demo ── -->
+  <section class="scene scene-demo" id="scene-demo">
+    <div class="scene-frame" style="border-color: rgba(255,255,255,0.08);"></div>
+    <div class="scene-inner">
+      <h2 class="demo-title">Real App Demo</h2>
+      <div class="demo-frame">
+        <div class="demo-bar">
+          <span class="demo-dot"></span>
+          <span class="demo-dot"></span>
+          <span class="demo-dot"></span>
+          <span class="demo-bar-label">CareOps Agent &mdash; localhost:3000</span>
+        </div>
+        <video id="demoVideo" muted playsinline preload="auto" poster="">
+          <source src="../demo.mov" type="video/quicktime" />
+          <source src="../demo.mov" type="video/mp4" />
+        </video>
+        <div class="demo-captions">
+          <span class="demo-caption">Natural language question</span>
+          <span class="demo-caption">Real Coral CLI</span>
+          <span class="demo-caption">SQL evidence</span>
+          <span class="demo-caption">Doctor-ready packet</span>
+          <span class="demo-caption">Synthetic data only</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Scene 6: SQL Evidence ── -->
+  <section class="scene scene-sql" id="scene-sql">
+    <div class="scene-frame"></div>
+    <div class="scene-inner">
+      <h2 class="sql-title">Coral SQL Evidence</h2>
+      <p class="sql-sub">Every answer is explainable through queryable evidence</p>
+      <div class="sql-panels">
+        <div class="sql-panel">
+          <div class="sql-panel-header">
+            <span class="dot"></span>
+            SQL Query
+          </div>
+          <div class="sql-panel-body"><span class="keyword">SELECT</span>
+  m.medicine_name, m.dose, m.frequency,
+  s.symptom, s.severity,
+  l.test_name, l.value, l.unit,
+  d.message <span class="keyword">AS</span> doctor_instruction,
+  p.quantity <span class="keyword">AS</span> refill_qty,
+  a.appointment_date, a.status,
+  n.note_text <span class="keyword">AS</span> family_note
+<span class="keyword">FROM</span> <span class="string">careops_medications.medications</span> m
+<span class="keyword">LEFT JOIN</span> <span class="string">careops_symptom_logs.symptom_logs</span> s
+  <span class="keyword">ON</span> s.patient_id = m.patient_id
+<span class="keyword">LEFT JOIN</span> <span class="string">careops_lab_reports.lab_reports</span> l
+  <span class="keyword">ON</span> l.patient_id = m.patient_id
+<span class="keyword">LEFT JOIN</span> <span class="string">careops_doctor_chats.doctor_chats</span> d
+  <span class="keyword">ON</span> d.patient_id = m.patient_id
+<span class="keyword">LEFT JOIN</span> <span class="string">careops_pharmacy_receipts.pharmacy_receipts</span> p
+  <span class="keyword">ON</span> p.patient_id = m.patient_id
+<span class="keyword">LEFT JOIN</span> <span class="string">careops_appointments.appointments</span> a
+  <span class="keyword">ON</span> a.patient_id = m.patient_id
+<span class="keyword">LEFT JOIN</span> <span class="string">careops_family_notes.family_notes</span> n
+  <span class="keyword">ON</span> n.patient_id = m.patient_id
+<span class="keyword">WHERE</span> m.patient_id = <span class="string">'pat-001'</span>
+<span class="keyword">ORDER BY</span> m.start_date <span class="keyword">DESC</span>;</div>
+        </div>
+        <div class="sql-panel">
+          <div class="sql-panel-header">
+            <span class="dot"></span>
+            Evidence Results
+          </div>
+          <div class="sql-panel-body">
+            <table class="sql-evidence-table">
+              <thead>
+                <tr>
+                  <th>Medicine</th>
+                  <th>Dose</th>
+                  <th>Symptom</th>
+                  <th>Lab</th>
+                  <th>Instruction</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Metformin</td><td>500mg</td><td>Fatigue</td><td>HbA1c: 7.2</td><td>Continue dose</td></tr>
+                <tr><td>Sitagliptin</td><td>100mg</td><td>Nausea</td><td>Glucose: 140</td><td>Monitor sugar</td></tr>
+                <tr><td>Amlodipine</td><td>5mg</td><td>&mdash;</td><td>BP: 138/88</td><td>Add to morning</td></tr>
+                <tr><td>Atorvastatin</td><td>20mg</td><td>&mdash;</td><td>LDL: 98</td><td>Continue</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="sql-join-viz">
+        <span>careops_patients</span>
+        <span>+</span>
+        <span>careops_medications</span>
+        <span>+</span>
+        <span>careops_lab_reports</span>
+        <span>+</span>
+        <span>careops_symptom_logs</span>
+        <span>+</span>
+        <span>careops_doctor_chats</span>
+        <span>+</span>
+        <span>careops_pharmacy_receipts</span>
+        <span>+</span>
+        <span>careops_appointments</span>
+        <span>+</span>
+        <span>careops_family_notes</span>
+        <span>+</span>
+        <span>careops_prescription_ocr</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Scene 7: Safety ── -->
+  <section class="scene scene-safety" id="scene-safety">
+    <div class="scene-frame"></div>
+    <div class="scene-inner">
+      <h2 class="safety-title">Safety Boundary</h2>
+      <div class="safety-notice">
+        <h3>&#9888;&#65039; Not a medical device</h3>
+        <ul>
+          <li><span class="mark">&#10007;</span> Does not diagnose conditions</li>
+          <li><span class="mark">&#10007;</span> Does not prescribe medicine</li>
+          <li><span class="mark">&#10007;</span> Does not recommend medicine changes</li>
+          <li><span class="mark">&#10003;</span> Organizes existing care records</li>
+          <li><span class="mark">&#10003;</span> Prepares questions for a licensed doctor</li>
+          <li><span class="mark">&#10003;</span> All demo data is synthetic / mock</li>
+        </ul>
+        <p class="footnote">
+          CareOps is a care-coordination tool. Always consult a licensed physician
+          for medical decisions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Scene 8: Outro ── -->
+  <section class="scene scene-outro" id="scene-outro">
+    <div class="scene-frame"></div>
+    <div class="scene-inner">
+      <h1 class="outro-title">CareOps Agent</h1>
+      <p class="outro-subtitle">Coral-powered family care coordination</p>
+      <div class="outro-creator">
+        <img src="avatar.png" alt="FiscalMindset" />
+        <div class="info">
+          <div class="name">Vicky Kumar</div>
+          <div class="handle">@FiscalMindset &middot; linkedin.com/in/algsoch</div>
+        </div>
+      </div>
+      <div class="outro-links">
+        <a href="https://github.com/FiscalMindset/careops" class="outro-link primary" target="_blank">&#128279; GitHub Repo</a>
+        <a href="#" class="outro-link secondary" onclick="document.getElementById('scene-demo').scrollIntoView({behavior:'smooth'}); return false;">&#9654; Demo Video</a>
+        <a href="https://github.com/withcoral/coral" class="outro-link secondary" target="_blank">&#127775; Coral Hackathon Track 2</a>
+      </div>
+      <div class="outro-track">Built for Coral Hackathon Track 2</div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
