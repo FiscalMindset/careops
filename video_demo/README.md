@@ -2,6 +2,8 @@
 
 Cinematic 8-scene demo video for CareOps Agent, built as part of the Coral Hackathon (Track 2).
 
+🎬 **Demo video:** [youtu.be/TAOyyIH2_rc](https://youtu.be/TAOyyIH2_rc)
+
 ## Structure
 
 | Scene | Title | Duration |
