@@ -1,0 +1,236 @@
+name: google_calendar
+version: 0.1.0
+dsl_version: 3
+backend: http
+description: >-
+  Query Google Calendar events, calendars, and settings from your Google
+  account using the Google Calendar API v3.
+inputs:
+  GOOGLE_CALENDAR_ACCESS_TOKEN:
+    kind: secret
+    hint: |
+      Google Calendar OAuth 2.0 access token with the calendar.readonly scope.
+
+      Obtain a token via Google OAuth playground or your preferred OAuth flow:
+      https://developers.google.com/oauthplayground
+
+      Required scope: https://www.googleapis.com/auth/calendar.readonly
+      Paste the raw access token (without "Bearer " prefix).
+base_url: "https://www.googleapis.com"
+auth:
+  type: HeaderAuth
+  headers:
+    - name: Authorization
+      from: template
+      template: "Bearer {{input.GOOGLE_CALENDAR_ACCESS_TOKEN}}"
+test_queries:
+  - SELECT id, summary FROM google_calendar.calendar_list LIMIT 3
+  - SELECT id, summary FROM google_calendar.events LIMIT 3
+tables:
+  - name: calendar_list
+    description: Calendars accessible by the authenticated user.
+    request:
+      method: GET
+      path: /calendar/v3/users/me/calendarList
+    response:
+      rows_path:
+        - items
+    pagination:
+      mode: cursor_query
+      cursor_param: pageToken
+      response_cursor_path:
+        - nextPageToken
+      page_size:
+        default: 100
+        max: 250
+        query_param: maxResults
+    columns:
+      - name: id
+        type: Utf8
+        nullable: false
+        description: Calendar ID.
+      - name: summary
+        type: Utf8
+        nullable: true
+        description: Calendar display name.
+      - name: description
+        type: Utf8
+        nullable: true
+        description: Calendar description.
+      - name: primary
+        type: Boolean
+        nullable: true
+        description: Whether this is the primary calendar.
+      - name: time_zone
+        type: Utf8
+        nullable: true
+        description: Calendar time zone.
+        expr:
+          kind: path
+          path:
+            - timeZone
+
+  - name: events
+    description: Events from the primary Google Calendar.
+    fetch_limit_default: 100
+    filters:
+      - name: time_min
+        required: false
+      - name: time_max
+        required: false
+      - name: q
+        required: false
+      - name: calendar_id
+        required: false
+    request:
+      method: GET
+      path: /calendar/v3/calendars/{{filter.calendar_id | default('primary')}}/events
+      query:
+        - name: timeMin
+          from: filter
+          key: time_min
+        - name: timeMax
+          from: filter
+          key: time_max
+        - name: q
+          from: filter
+          key: q
+        - name: singleEvents
+          from: literal
+          value: true
+        - name: orderBy
+          from: literal
+          value: startTime
+    response:
+      rows_path:
+        - items
+    pagination:
+      mode: cursor_query
+      cursor_param: pageToken
+      response_cursor_path:
+        - nextPageToken
+      page_size:
+        default: 100
+        max: 250
+        query_param: maxResults
+    columns:
+      - name: calendar_id
+        type: Utf8
+        nullable: true
+        virtual: true
+        description: Calendar ID used for this query.
+        expr:
+          kind: from_filter
+          key: calendar_id
+      - name: q
+        type: Utf8
+        nullable: true
+        virtual: true
+        description: Free-text search filter.
+        expr:
+          kind: from_filter
+          key: q
+      - name: id
+        type: Utf8
+        nullable: false
+        description: Event ID.
+      - name: summary
+        type: Utf8
+        nullable: true
+        description: Event title.
+      - name: description
+        type: Utf8
+        nullable: true
+        description: Event description.
+      - name: location
+        type: Utf8
+        nullable: true
+        description: Event location.
+      - name: status
+        type: Utf8
+        nullable: true
+        description: Event status (confirmed, tentative, cancelled).
+      - name: start
+        type: Utf8
+        nullable: true
+        description: Event start datetime.
+        expr:
+          kind: path
+          path:
+            - start
+            - dateTime
+      - name: end
+        type: Utf8
+        nullable: true
+        description: Event end datetime.
+        expr:
+          kind: path
+          path:
+            - end
+            - dateTime
+      - name: start_date
+        type: Utf8
+        nullable: true
+        description: Event start date (all-day events).
+        expr:
+          kind: path
+          path:
+            - start
+            - date
+      - name: end_date
+        type: Utf8
+        nullable: true
+        description: Event end date (all-day events).
+        expr:
+          kind: path
+          path:
+            - end
+            - date
+      - name: html_link
+        type: Utf8
+        nullable: true
+        description: Event link in Google Calendar web UI.
+        expr:
+          kind: path
+          path:
+            - htmlLink
+      - name: created
+        type: Timestamp
+        nullable: true
+        description: Event creation timestamp.
+        expr:
+          kind: format_timestamp
+          input: iso8601
+          expr:
+            kind: path
+            path:
+              - created
+      - name: updated
+        type: Timestamp
+        nullable: true
+        description: Event last updated timestamp.
+        expr:
+          kind: format_timestamp
+          input: iso8601
+          expr:
+            kind: path
+            path:
+              - updated
+      - name: creator_email
+        type: Utf8
+        nullable: true
+        description: Email of the event creator.
+        expr:
+          kind: path
+          path:
+            - creator
+            - email
+      - name: organizer_email
+        type: Utf8
+        nullable: true
+        description: Email of the event organizer.
+        expr:
+          kind: path
+          path:
+            - organizer
+            - email
