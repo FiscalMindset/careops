@@ -18,8 +18,15 @@
   <!-- Progress -->
   <div class="progress"><div class="progress-bar"></div></div>
 
-  <!-- Watermark -->
-  <div class="watermark">Vicky Kumar · @FiscalMindset · github.com/FiscalMindset/careops</div>
+  <!-- Creator Badge -->
+  <div class="creator-badge">
+    <img src="avatar.png" alt="" class="creator-badge-avatar" />
+    <div class="creator-badge-info">
+      <span class="creator-badge-name">Vicky Kumar</span>
+      <span class="creator-badge-handle">@FiscalMindset</span>
+      <a href="https://github.com/FiscalMindset/careops" class="creator-badge-repo" target="_blank">github.com/FiscalMindset/careops</a>
+    </div>
+  </div>
 
   <!-- Scene Nav -->
   <nav class="scene-nav" aria-label="Scene navigation">
@@ -40,7 +47,9 @@
   </div>
 
   <!-- ── Scene 1: Intro ── -->
-  <section class="scene scene-intro" id="scene-intro">
+  <section class="scene scene-intro" id="scene-intro"
+    data-caption="CareOps Agent turns scattered family care records into a doctor-ready packet using Coral."
+    data-script="CareOps Agent is a Coral-powered family care coordination assistant built by Vicky Kumar, also known as FiscalMindset, for Coral Hackathon Track Two.">
     <div class="scene-frame"></div>
     <div class="scene-inner">
       <img src="avatar.png" alt="FiscalMindset" class="intro-avatar" />
@@ -53,7 +62,9 @@
   </section>
 
   <!-- ── Scene 2: The Problem ── -->
-  <section class="scene scene-problem" id="scene-problem">
+  <section class="scene scene-problem" id="scene-problem"
+    data-caption="The problem: scattered care records, no single view before a doctor visit."
+    data-script="Family care records are scattered across chats, receipts, lab PDFs, prescriptions, symptom notes, and appointment cards. Before a doctor visit, there is no single source of truth.">
     <div class="scene-frame"></div>
     <div class="scene-inner">
       <h2 class="problem-title">The Real Problem</h2>
@@ -71,48 +82,113 @@
   </section>
 
   <!-- ── Scene 3: Solution ── -->
-  <section class="scene scene-solution" id="scene-solution">
+  <section class="scene scene-solution" id="scene-solution"
+    data-caption="CareOps uses Coral SQL to connect 9 care sources into one visit packet."
+    data-script="CareOps connects nine synthetic care sources through Coral SQL and generates a doctor-ready visit packet with medicines, labs, symptoms, instructions, refills, and missing records.">
     <div class="scene-frame"></div>
     <div class="scene-inner">
       <h2 class="solution-title">What CareOps Does</h2>
       <p class="solution-sub">Turns scattered care records into a doctor-ready visit packet</p>
       <div class="solution-flow">
-        <div class="sources-grid">
-          <div class="source-card">Doctor Chats</div>
-          <div class="source-card">Pharmacy Receipts</div>
-          <div class="source-card">Lab Reports</div>
-          <div class="source-card">Symptom Logs</div>
-          <div class="source-card">Appointments</div>
-          <div class="source-card">Prescription OCR</div>
-          <div class="source-card">Family Notes</div>
-          <div class="source-card">Medications</div>
-          <div class="source-card">Patients</div>
+        <div class="sources-row">
+          <span class="source-tag">Doctor Chats</span>
+          <span class="source-tag">Pharmacy Receipts</span>
+          <span class="source-tag">Lab Reports</span>
+          <span class="source-tag">Symptom Logs</span>
+          <span class="source-tag">Appointments</span>
+          <span class="source-tag">Prescription OCR</span>
+          <span class="source-tag">Family Notes</span>
+          <span class="source-tag">Medications</span>
+          <span class="source-tag">Patients</span>
         </div>
-        <div class="flow-arrow">&rarr;</div>
-        <div class="flow-box">Coral SQL Layer</div>
-        <div class="flow-arrow">&rarr;</div>
-        <div class="flow-box">Doctor Visit Packet</div>
+        <div class="flow-row">
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box">Coral SQL Layer</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box">Doctor Visit Packet</div>
+        </div>
+      </div>
+      <div class="solution-features">
+        <div class="sol-feature">
+          <span class="sol-f-icon">&#128172;</span>
+          <div class="sol-f-body">
+            <div class="sol-f-title">AI-Powered Q&amp;A</div>
+            <div class="sol-f-desc">Ask natural questions about any patient&rsquo;s care &mdash; get structured answers with SQL evidence</div>
+          </div>
+        </div>
+        <div class="sol-feature">
+          <span class="sol-f-icon">&#128279;</span>
+          <div class="sol-f-body">
+            <div class="sol-f-title">Multi-Source Joins</div>
+            <div class="sol-f-desc">Coral SQL joins across 9 data sources &mdash; medications, labs, symptoms, chats, receipts, and more</div>
+          </div>
+        </div>
+        <div class="sol-feature">
+          <span class="sol-f-icon">&#128203;</span>
+          <div class="sol-f-body">
+            <div class="sol-f-title">Doctor-Ready Packets</div>
+            <div class="sol-f-desc">Auto-compile visit summaries with full history &mdash; ready to share with a licensed physician</div>
+          </div>
+        </div>
+        <div class="sol-feature">
+          <span class="sol-f-icon">&#128270;</span>
+          <div class="sol-f-body">
+            <div class="sol-f-title">SQL Evidence</div>
+            <div class="sol-f-desc">Every answer is explainable &mdash; see the exact query, results, and data provenance</div>
+          </div>
+        </div>
+        <div class="sol-feature">
+          <span class="sol-f-icon">&#128137;</span>
+          <div class="sol-f-body">
+            <div class="sol-f-title">Medication Intel</div>
+            <div class="sol-f-desc">Track doses, schedules, and refill quantities across family members from pharmacy receipts</div>
+          </div>
+        </div>
+        <div class="sol-feature">
+          <span class="sol-f-icon">&#128197;</span>
+          <div class="sol-f-body">
+            <div class="sol-f-title">Care Timeline</div>
+            <div class="sol-f-desc">Visual history of appointments, symptom severity trends, and lab results over time</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ── Scene 4: Architecture ── -->
-  <section class="scene scene-arch" id="scene-arch">
+  <section class="scene scene-arch" id="scene-arch"
+    data-caption="Next.js 15 + TypeScript + Tailwind + Coral MCP & SQL + SQLite + Vitest"
+    data-script="The stack uses Next.js, TypeScript, Tailwind CSS, Coral MCP, Coral SQL, SQLite, and Vitest. Coral acts as the unified query layer across all care sources.">
     <div class="scene-frame"></div>
     <div class="scene-inner">
       <h2 class="arch-title">Tech Stack &amp; Architecture</h2>
-      <p class="arch-sub">How CareOps is built</p>
+      <p class="arch-sub">How CareOps connects real data sources through Coral</p>
       <div class="arch-flow">
-        <div class="arch-node highlight">Next.js 15 + TypeScript + Tailwind</div>
-        <div class="arch-connector">&#8595;</div>
-        <div class="arch-node">CareOps Agent</div>
+        <div class="arch-sources">
+          <span class="arch-section-label">Data Sources</span>
+          <div class="source-chips">
+            <span class="source-chip">Doctor Chats</span>
+            <span class="source-chip">Pharmacy Receipts</span>
+            <span class="source-chip">Lab Reports</span>
+            <span class="source-chip">Symptom Logs</span>
+            <span class="source-chip">Appointments</span>
+            <span class="source-chip">Prescription OCR</span>
+            <span class="source-chip">Family Notes</span>
+            <span class="source-chip">Medications</span>
+            <span class="source-chip">Patients</span>
+          </div>
+        </div>
         <div class="arch-connector">&#8595;</div>
         <div class="arch-node highlight">Coral MCP &amp; Coral SQL</div>
+        <div class="arch-sub-label">unified query layer across all 9 sources</div>
         <div class="arch-connector">&#8595;</div>
-        <div class="arch-node">SQLite / Synthetic Care Records</div>
+        <div class="arch-node highlight">CareOps Agent</div>
+        <div class="arch-sub-label">Next.js 15 + TypeScript + Tailwind</div>
         <div class="arch-connector">&#8595;</div>
-        <div class="arch-node highlight">Doctor-Ready Packet</div>
+        <div class="arch-node">Doctor-Ready Visit Packet</div>
+        <div class="arch-and-more">+ AI Q&amp;A &middot; SQL evidence &middot; Care summaries &middot; Pharmacy checks &middot; Appointment tracking</div>
       </div>
+      <div class="arch-data-note">&#9889; Demo uses synthetic care records &middot; Architecture supports real-world data sources</div>
       <div class="stack-badges">
         <span class="stack-badge">Next.js 15</span>
         <span class="stack-badge">TypeScript</span>
@@ -127,7 +203,9 @@
   </section>
 
   <!-- ── Scene 5: Real App Demo ── -->
-  <section class="scene scene-demo" id="scene-demo">
+  <section class="scene scene-demo" id="scene-demo"
+    data-caption="Live demo: natural language queries, Coral CLI, SQL evidence, doctor-ready packet"
+    data-script="This is the real app demo. I select a patient, ask a natural language question, run Coral, and generate a doctor-ready packet with SQL evidence.">
     <div class="scene-frame" style="border-color: rgba(255,255,255,0.08);"></div>
     <div class="scene-inner">
       <h2 class="demo-title">Real App Demo</h2>
@@ -154,7 +232,9 @@
   </section>
 
   <!-- ── Scene 6: SQL Evidence ── -->
-  <section class="scene scene-sql" id="scene-sql">
+  <section class="scene scene-sql" id="scene-sql"
+    data-caption="Every answer joins 8+ tables: medications, labs, symptoms, doctor chats, receipts, appointments, notes, OCR"
+    data-script="This is where Coral matters. The answer is not based on one file. It comes from joined records across medicines, labs, symptoms, doctor chats, receipts, appointments, and notes.">
     <div class="scene-frame"></div>
     <div class="scene-inner">
       <h2 class="sql-title">Coral SQL Evidence</h2>
@@ -238,7 +318,9 @@
   </section>
 
   <!-- ── Scene 7: Safety ── -->
-  <section class="scene scene-safety" id="scene-safety">
+  <section class="scene scene-safety" id="scene-safety"
+    data-caption="CareOps organizes records only — always consult a licensed physician for medical decisions"
+    data-script="CareOps is not a medical device. It does not diagnose, prescribe, or recommend medicine changes. It only organizes synthetic records for doctor-visit preparation.">
     <div class="scene-frame"></div>
     <div class="scene-inner">
       <h2 class="safety-title">Safety Boundary</h2>
@@ -261,7 +343,9 @@
   </section>
 
   <!-- ── Scene 8: Outro ── -->
-  <section class="scene scene-outro" id="scene-outro">
+  <section class="scene scene-outro" id="scene-outro"
+    data-caption="github.com/FiscalMindset/careops — Built on Coral. Thank you Coral & WeMakeDevs."
+    data-script="CareOps Agent is built on Coral by Vicky Kumar, FiscalMindset. The repository is github.com slash FiscalMindset slash careops. Thank you to Coral and WeMakeDevs.">
     <div class="scene-frame"></div>
     <div class="scene-inner">
       <h1 class="outro-title">CareOps Agent</h1>
@@ -273,14 +357,60 @@
           <div class="handle">@FiscalMindset &middot; linkedin.com/in/algsoch</div>
         </div>
       </div>
+
+      <div class="outro-coral">
+        <div class="outro-coral-heading">Built on Coral</div>
+        <div class="outro-coral-flow">
+          <div class="outro-coral-step">
+            <div class="outro-coral-step-label">Contributions</div>
+            <div class="outro-coral-step-body">
+              <div class="oc-tags-row">
+                <span class="oc-tag oc-merged">Groq AI</span>
+                <span class="oc-tag oc-merged">Ollama</span>
+                <span class="oc-tag oc-merged">LM Studio</span>
+                <span class="oc-tag oc-merged">OpenRouter</span>
+                <span class="oc-tag oc-merged">Mistral AI</span>
+              </div>
+              <span class="oc-badge oc-badge-merged">&#10003; 6 merged</span>
+              <div class="oc-divider"></div>
+              <div class="oc-tags-row">
+                <span class="oc-tag oc-pending">NVIDIA NIM</span>
+              </div>
+              <span class="oc-badge oc-badge-pending">&#9203; approved &middot; waiting for merge</span>
+            </div>
+          </div>
+          <div class="outro-coral-connector">&#8595;</div>
+          <div class="outro-coral-step">
+            <div class="outro-coral-step-label">Platform</div>
+            <div class="outro-coral-step-body oc-platform">Coral MCP + Coral SQL &mdash; unified query layer</div>
+          </div>
+          <div class="outro-coral-connector">&#8595;</div>
+          <div class="outro-coral-step">
+            <div class="outro-coral-step-label">Built with it</div>
+            <div class="outro-coral-step-body oc-app">CareOps Agent &mdash; 9 data sources, 1 query layer</div>
+          </div>
+        </div>
+        <div class="outro-coral-thanks">Thank you to the Coral team for the platform &amp; ecosystem</div>
+      </div>
+
       <div class="outro-links">
-        <a href="https://github.com/FiscalMindset/careops" class="outro-link primary" target="_blank">&#128279; GitHub Repo</a>
-        <a href="#" class="outro-link secondary" onclick="document.getElementById('scene-demo').scrollIntoView({behavior:'smooth'}); return false;">&#9654; Demo Video</a>
-        <a href="https://github.com/withcoral/coral" class="outro-link secondary" target="_blank">&#127775; Coral Hackathon Track 2</a>
+        <a href="https://github.com/FiscalMindset/careops" class="outro-link primary" target="_blank">&#128279; Repo</a>
+        <a href="#" class="outro-link secondary" onclick="document.getElementById('scene-demo').scrollIntoView({behavior:'smooth'}); return false;">&#9654; Demo</a>
+        <a href="https://github.com/withcoral/coral" class="outro-link secondary" target="_blank"><img src="coral-logo.svg" alt="" class="coral-link-logo" /> Coral</a>
       </div>
       <div class="outro-track">Built for Coral Hackathon Track 2</div>
     </div>
   </section>
+
+  <!-- ── Voice Area (fixed) ── -->
+  <div class="voice-area" id="voiceArea">
+    <button class="voice-btn" id="voiceBtn" aria-label="Play narration">
+      <img src="avatar.png" alt="" class="voice-avatar" />
+      <span class="voice-label" id="voiceLabel">Play Voice</span>
+      <span class="voice-wave" id="voiceWave"><span></span><span></span><span></span></span>
+    </button>
+    <div class="voice-caption" id="voiceCaption"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
