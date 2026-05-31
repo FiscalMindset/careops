@@ -1,0 +1,338 @@
+{
+  "/Volumes/algsoch/careops/next-env.d.ts": {
+    "mtime": 1780058635.33,
+    "hash": "ba64ff7d54714a8f64db89b1003207d8"
+  },
+  "/Volumes/algsoch/careops/next.config.ts": {
+    "mtime": 1780050365.9,
+    "hash": "4136ec0976ca6fba7423ef6c46142af0"
+  },
+  "/Volumes/algsoch/careops/postcss.config.js": {
+    "mtime": 1780050366.02,
+    "hash": "86e9e20e4c60281535291ad9a3b993f6"
+  },
+  "/Volumes/algsoch/careops/tailwind.config.ts": {
+    "mtime": 1780050366.13,
+    "hash": "dcf0f3ec4fd1e40936f6c316b8fb10fd"
+  },
+  "/Volumes/algsoch/careops/vitest.config.ts": {
+    "mtime": 1780052795.25,
+    "hash": "442cc15ce12e3dd9d0e82698b9981bf1"
+  },
+  "/Volumes/algsoch/careops/index.js": {
+    "mtime": 1780052014.35,
+    "hash": "63e160524948acabaefcd5949ae7bf75"
+  },
+  "/Volumes/algsoch/careops/app/layout.tsx": {
+    "mtime": 1780050530.67,
+    "hash": "f16cf31e00c2320c01dc9a16ca9f756e"
+  },
+  "/Volumes/algsoch/careops/app/page.tsx": {
+    "mtime": 1780050593.88,
+    "hash": "bb621be9e5c3f6a83613c6a27df633b2"
+  },
+  "/Volumes/algsoch/careops/app/api/export/route.ts": {
+    "mtime": 1780050605.3,
+    "hash": "925939464773ceef682cf08d505159a2"
+  },
+  "/Volumes/algsoch/careops/app/api/packet/route.ts": {
+    "mtime": 1780050605.18,
+    "hash": "e2437312b1a2e706b13d3ef5ff9ec546"
+  },
+  "/Volumes/algsoch/careops/app/about/page.tsx": {
+    "mtime": 1780050594.72,
+    "hash": "41481d300286990a84b9cd50c81bd1c2"
+  },
+  "/Volumes/algsoch/careops/app/data-sources/page.tsx": {
+    "mtime": 1780050594.0,
+    "hash": "10fa184b94df7a59c5303b482f4d89db"
+  },
+  "/Volumes/algsoch/careops/app/evidence/page.tsx": {
+    "mtime": 1780050594.48,
+    "hash": "9c489924e9e0079ef11bfb1d1f87de6b"
+  },
+  "/Volumes/algsoch/careops/app/exports/page.tsx": {
+    "mtime": 1780050594.6,
+    "hash": "5da1f7c7fc45cc67443fe40072ad83dd"
+  },
+  "/Volumes/algsoch/careops/app/packet/page.tsx": {
+    "mtime": 1780050594.36,
+    "hash": "f95a6a78358554c4d9d69e9e3ee701a1"
+  },
+  "/Volumes/algsoch/careops/app/patients/page.tsx": {
+    "mtime": 1780050594.12,
+    "hash": "b49226ed81a37a71f50461b8c62b02de"
+  },
+  "/Volumes/algsoch/careops/app/timeline/page.tsx": {
+    "mtime": 1780063123.04,
+    "hash": "141ce4a32ea5f2a379c1c31424f481ad"
+  },
+  "/Volumes/algsoch/careops/src/components/ui.tsx": {
+    "mtime": 1780063884.32,
+    "hash": "9b88d95428bd175e78bbf2c3198f05b3"
+  },
+  "/Volumes/algsoch/careops/src/lib/agent/careops-agent.ts": {
+    "mtime": 1780063199.63,
+    "hash": "3179821f68b0fe87d29975d80c3da146"
+  },
+  "/Volumes/algsoch/careops/src/lib/coral/queries.ts": {
+    "mtime": 1780062897.36,
+    "hash": "2814ed4a8351f8c41f7e335364c7cad9"
+  },
+  "/Volumes/algsoch/careops/src/lib/coral/mock-coral.ts": {
+    "mtime": 1780050445.8,
+    "hash": "1971c38aa6bc51d16548e24056bcaa60"
+  },
+  "/Volumes/algsoch/careops/src/lib/coral/client.ts": {
+    "mtime": 1780052551.53,
+    "hash": "58aa0e74b94727f553f65c2eb2be9390"
+  },
+  "/Volumes/algsoch/careops/src/lib/data/csv.ts": {
+    "mtime": 1780050445.42,
+    "hash": "0bc4aaf4ca63ae5b40876890a2c2b86c"
+  },
+  "/Volumes/algsoch/careops/src/lib/data/load-careops-data.ts": {
+    "mtime": 1780050445.54,
+    "hash": "c01c29cc5b3dd2a82998d79c2804efb1"
+  },
+  "/Volumes/algsoch/careops/src/lib/export/markdown.ts": {
+    "mtime": 1780050484.07,
+    "hash": "2e17b6a35393538b475be452d9a53d48"
+  },
+  "/Volumes/algsoch/careops/src/types/careops.ts": {
+    "mtime": 1780050445.3,
+    "hash": "ba2c17187e599260c07a018ecdba72ef"
+  },
+  "/Volumes/algsoch/careops/video_demo/script.js": {
+    "mtime": 1780063027.04,
+    "hash": "6bdd812e3b026a26357e1edd79739d28"
+  },
+  "/Volumes/algsoch/careops/tests/careops.test.ts": {
+    "mtime": 1780058168.82,
+    "hash": "54cadaf8bae25efe7620e2d5b762b3e4"
+  },
+  "/Volumes/algsoch/careops/scripts/export-packet.ts": {
+    "mtime": 1780063093.15,
+    "hash": "3bc9d4571a1a2d72759e0559a4bd60c3"
+  },
+  "/Volumes/algsoch/careops/scripts/seed.ts": {
+    "mtime": 1780063080.47,
+    "hash": "38934f9fe11e4ad0d3c3e70d28671700"
+  },
+  "/Volumes/algsoch/careops/README.md": {
+    "mtime": 1780062974.35,
+    "hash": "3d055702f1466ec64a13210d00b6a537"
+  },
+  "/Volumes/algsoch/careops/AGENT_HANDOFF/PROJECT_AUDIT.md": {
+    "mtime": 1780062951.49,
+    "hash": "ec66d18a514dc97b3e437f3b3426587d"
+  },
+  "/Volumes/algsoch/careops/AGENT_HANDOFF/PROJECT_STATUS.md": {
+    "mtime": 1780062952.41,
+    "hash": "54e7ab1d9cd9cf8631e1db9d251adc21"
+  },
+  "/Volumes/algsoch/careops/AGENT_HANDOFF/IMPLEMENTATION_LOG.md": {
+    "mtime": 1780062953.51,
+    "hash": "535927f79ff761496bf0d4ab903b3a4b"
+  },
+  "/Volumes/algsoch/careops/AGENT_HANDOFF/NEXT_AGENT_GUIDE.md": {
+    "mtime": 1780062955.61,
+    "hash": "2ed98fb617d7a6d60bf9f1dc43456c0d"
+  },
+  "/Volumes/algsoch/careops/AGENT_HANDOFF/VALIDATION_CHECKLIST.md": {
+    "mtime": 1780062957.48,
+    "hash": "64e0a5d09e6fb911f87a02586b6b5191"
+  },
+  "/Volumes/algsoch/careops/video_demo/index.html": {
+    "mtime": 1780062999.28,
+    "hash": "78d8513d97ade81d245beefcc8b4ff1d"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_patients_spec.md": {
+    "mtime": 1780050623.72,
+    "hash": "86a08b38d370b1e46a8fd6727217741b"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_medications_spec.md": {
+    "mtime": 1780050623.84,
+    "hash": "e9b496b3a1560feb9cc5f5eb4f400fb3"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_lab_reports_spec.md": {
+    "mtime": 1780050623.95,
+    "hash": "8605d8343bc17bca8800dcfe3812329b"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_doctor_chats_spec.md": {
+    "mtime": 1780050624.06,
+    "hash": "d0965f74160a4c1076801c60e2a60525"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_pharmacy_receipts_spec.md": {
+    "mtime": 1780050624.18,
+    "hash": "6e1cd48d003d34e40e42ae1562c77619"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_symptom_logs_spec.md": {
+    "mtime": 1780050624.29,
+    "hash": "260ffab5a05a51dbdf0d50e9c74db231"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_appointments_spec.md": {
+    "mtime": 1780050624.41,
+    "hash": "da02d280b2feed097e2df0f520eefc82"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_prescription_ocr_spec.md": {
+    "mtime": 1780050624.53,
+    "hash": "c1462e73eab66826be9b65ae667c2508"
+  },
+  "/Volumes/algsoch/careops/coral/specs/careops_family_notes_spec.md": {
+    "mtime": 1780050624.65,
+    "hash": "055bac05ff25d58d0029587230f57cd0"
+  },
+  "/Volumes/algsoch/careops/coral/specs/README.md": {
+    "mtime": 1780052606.2,
+    "hash": "4175f4f4d051876dd4762fe0ce4fb924"
+  },
+  "/Volumes/algsoch/careops/docs/RUN_PROJECT.md": {
+    "mtime": 1780062960.93,
+    "hash": "7c44b3fa0eba6dda46bb1f4578d669d4"
+  },
+  "/Volumes/algsoch/careops/docs/ISSUES.md": {
+    "mtime": 1780063243.18,
+    "hash": "dddd2f7ddcbac1e8a764e9b0b8a2c34c"
+  },
+  "/Volumes/algsoch/careops/docs/GRAPHIFY.md": {
+    "mtime": 1780062964.62,
+    "hash": "2e327467f7022d1ec634ca52f5b3446a"
+  },
+  "/Volumes/algsoch/careops/docs/API_KEYS.md": {
+    "mtime": 1780058154.0,
+    "hash": "1cd4dbe2111912e5279f1f3ef29142be"
+  },
+  "/Volumes/algsoch/careops/docs/COMMANDS.md": {
+    "mtime": 1780058133.16,
+    "hash": "ef500fb97efc81b52457177d2bcc444c"
+  },
+  "/Volumes/algsoch/careops/docs/ARCHITECTURE.md": {
+    "mtime": 1780058177.56,
+    "hash": "cd9b8ddc1fa17a3318f01be15da6626b"
+  },
+  "/Volumes/algsoch/careops/docs/SPECS.md": {
+    "mtime": 1780052606.3,
+    "hash": "21d26949015a3f196bfd3f0d27d296af"
+  },
+  "/Volumes/algsoch/careops/docs/CONTRIBUTING.md": {
+    "mtime": 1780058154.01,
+    "hash": "cc3f184098023203d6613712678d8e1f"
+  },
+  "/Volumes/algsoch/careops/docs/SCRIPT.md": {
+    "mtime": 1780058154.36,
+    "hash": "767cadaab98031bef36e50a273de09c2"
+  },
+  "/Volumes/algsoch/careops/docs/TEST_OUTPUT.md": {
+    "mtime": 1780063261.27,
+    "hash": "bcec98e56ad74f728eacea0ca37599a9"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-01-project-setup.md": {
+    "mtime": 1780050737.28,
+    "hash": "70d0aef0390c18c4cb65c57de9d8652f"
+  },
+  "/Volumes/algsoch/careops/docs/prs/09-tests-validation.md": {
+    "mtime": 1780058108.15,
+    "hash": "2cdbba5374bf766d4c847e9337c4be56"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-02-seed-data.md": {
+    "mtime": 1780050737.4,
+    "hash": "e489c38c062f435ed3cd9baf5d1562bb"
+  },
+  "/Volumes/algsoch/careops/docs/prs/11-agent-handoff.md": {
+    "mtime": 1780062966.05,
+    "hash": "0b735cafb6c2cb56a531a18f477bfe4b"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-03-coral-layer.md": {
+    "mtime": 1780050737.52,
+    "hash": "44a656ae63bf65370f6a038f438abca5"
+  },
+  "/Volumes/algsoch/careops/docs/prs/10-docs-demo.md": {
+    "mtime": 1780058198.63,
+    "hash": "2001e7d8da4eb7baa7783f95bb8670d5"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-04-custom-specs.md": {
+    "mtime": 1780050776.09,
+    "hash": "906fc030bab2254d05452e48fab3c213"
+  },
+  "/Volumes/algsoch/careops/docs/prs/12-video-demo.md": {
+    "mtime": 1780062967.18,
+    "hash": "f8042041e3ceb41cc5c92e626a174dba"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-05-care-timeline-ui.md": {
+    "mtime": 1780050776.21,
+    "hash": "65def8f1f0b8e8cfa4610f9823dc8196"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-06-packet-builder.md": {
+    "mtime": 1780050776.32,
+    "hash": "6bcbd45dcac6410e2f0554850c2c9dd6"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-07-evidence-panel.md": {
+    "mtime": 1780050776.45,
+    "hash": "abd36bbb3a75c02f20c0ec5cf426a43a"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-08-markdown-export.md": {
+    "mtime": 1780050776.58,
+    "hash": "4757ecd55663c10f96d2bee6fb1ddfb4"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-09-tests-validation.md": {
+    "mtime": 1780050776.71,
+    "hash": "d91e0b26364e2447caf75fa0bc875fad"
+  },
+  "/Volumes/algsoch/careops/docs/prs/feature-10-docs-demo.md": {
+    "mtime": 1780050776.86,
+    "hash": "c72290ce22f11506b1975abaf746be80"
+  },
+  "/Volumes/algsoch/careops/docs/prs/01-project-setup.md": {
+    "mtime": 1780052265.27,
+    "hash": "01d55abb203433dae91918a1f9a74440"
+  },
+  "/Volumes/algsoch/careops/docs/prs/02-seed-data.md": {
+    "mtime": 1780052419.12,
+    "hash": "2ac127345e1cfdcbce2ac03a41038442"
+  },
+  "/Volumes/algsoch/careops/docs/prs/03-coral-source-layer.md": {
+    "mtime": 1780052565.16,
+    "hash": "af71421e214b1724b6742c2e06b6cc8f"
+  },
+  "/Volumes/algsoch/careops/docs/prs/04-custom-specs.md": {
+    "mtime": 1780052606.6,
+    "hash": "717b2d347ac5a7c18a0d72e9452d14f7"
+  },
+  "/Volumes/algsoch/careops/docs/prs/05-care-timeline.md": {
+    "mtime": 1780052648.47,
+    "hash": "2b544182f166db713cfbe1dfb3f2708a"
+  },
+  "/Volumes/algsoch/careops/docs/prs/06-packet-builder.md": {
+    "mtime": 1780052684.01,
+    "hash": "c43d1364018cafcca36e26161a91587b"
+  },
+  "/Volumes/algsoch/careops/docs/prs/07-sql-evidence.md": {
+    "mtime": 1780052708.1,
+    "hash": "7399f8867c5fbc9e65deabca29dd8369"
+  },
+  "/Volumes/algsoch/careops/docs/prs/08-export-packet.md": {
+    "mtime": 1780052741.47,
+    "hash": "5cbf2bd7276f3a444f5f9af3c0cf936d"
+  },
+  "/Volumes/algsoch/careops/AGENT_STATUS/PROJECT_STATUS.md": {
+    "mtime": 1780050737.04,
+    "hash": "230a2726f7909cb75deaa7f374e1e919"
+  },
+  "/Volumes/algsoch/careops/AGENT_STATUS/PROJECT_STATE.md": {
+    "mtime": 1780058198.62,
+    "hash": "e53199a310efe33c243948905da0037f"
+  },
+  "/Volumes/algsoch/careops/exports/pat-001-diabetes-follow-up.md": {
+    "mtime": 1780063279.28,
+    "hash": "f44b51b95e6b91a6f05c5ead061c4519"
+  },
+  "/Volumes/algsoch/careops/graphify/README.md": {
+    "mtime": 1780050684.01,
+    "hash": "23a2cca57145e739b45b7dc4f54cc9c6"
+  },
+  "/Volumes/algsoch/careops/public/screenshots/avatar-placeholder.svg": {
+    "mtime": 1780050683.54,
+    "hash": "71dc17d27de797d05d644677656b90b0"
+  }
+}

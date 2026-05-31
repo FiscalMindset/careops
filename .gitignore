@@ -8,4 +8,3 @@ exports/*.md
 *.pdf
 .DS_Store
 ._*
-graphify-out/
