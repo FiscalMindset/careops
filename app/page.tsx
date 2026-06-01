@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { generateDoctorVisitPacket } from "@/lib/agent/careops-agent";
 import { loadCareOpsData } from "@/lib/data/load-careops-data";
+import { CoralClient } from "@/lib/coral/client";
 import { QueryInput } from "@/components/query-input";
 import { PatientSelector } from "@/components/patient-selector";
 import { ModeBadge, Badge, Card, PageHeader, SafetyNotice } from "@/components/ui";
@@ -18,6 +19,23 @@ export default async function DashboardPage() {
 
   const mode = process.env.CAREOPS_QUERY_MODE === "mock" ? "mock" : "coral_cli";
   const isMock = mode === "mock";
+
+  const coral = new CoralClient();
+  const coralAvailable = mode === "coral_cli" ? await coral.isCoralAvailable() : false;
+
+  let ollamaConnected = false;
+  let groqConnected = false;
+
+  if (coralAvailable) {
+    const ollamaResp = await coral.executeQuery("SELECT version FROM ollama.version LIMIT 1");
+    ollamaConnected = ollamaResp.result !== null && ollamaResp.result.rows.length > 0;
+
+    const groqResp = await coral.executeQuery("SELECT id, owned_by FROM groq_ai.models LIMIT 1");
+    groqConnected = groqResp.result !== null && groqResp.result.rows.length > 0;
+  }
+
+  const aiSourceCount = (ollamaConnected ? 1 : 0) + (groqConnected ? 1 : 0);
+  const dataSourceCount = 9;
 
   return (
     <div className="space-y-6">
@@ -51,7 +69,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-3.5 w-3.5 text-success" />
-                      <span className="text-muted">Sources registered: <strong>9/9</strong></span>
+                      <span className="text-muted">Sources registered: <strong>{dataSourceCount + aiSourceCount}/{dataSourceCount + aiSourceCount}</strong></span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-3.5 w-3.5 text-success" />
@@ -68,13 +86,28 @@ export default async function DashboardPage() {
       </Card>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-6">
+      <div className="grid gap-4 md:grid-cols-7">
         <Card><p className="text-sm text-muted">Patients</p><p className="mt-2 text-3xl font-semibold">{data.patients.length}</p></Card>
-        <Card><p className="text-sm text-muted">Connected sources</p><p className="mt-2 text-3xl font-semibold">9</p></Card>
+        <Card><p className="text-sm text-muted">Connected sources</p><p className="mt-2 text-3xl font-semibold" title={`${dataSourceCount} data + ${aiSourceCount} AI`}>{dataSourceCount + aiSourceCount}</p></Card>
         <Card><p className="text-sm text-muted">Total records</p><p className="mt-2 text-3xl font-semibold">{totalRows}</p></Card>
         <Card><p className="text-sm text-muted">Evidence rows</p><p className="mt-2 text-3xl font-semibold">{packet.evidenceRows.length}</p></Card>
         <Card><p className="text-sm text-muted">Coral engine</p><p className="mt-2"><Badge tone="success">coral sql</Badge></p></Card>
-        <Card><p className="text-sm text-muted">Ollama AI</p><p className="mt-2"><Badge tone="success">Connected</Badge></p></Card>
+        <Card>
+          <p className="text-sm text-muted">Ollama</p>
+          <p className="mt-2">
+            <Badge tone={ollamaConnected ? "success" : "neutral"}>
+              {ollamaConnected ? "Connected" : "Offline"}
+            </Badge>
+          </p>
+        </Card>
+        <Card>
+          <p className="text-sm text-muted">Groq</p>
+          <p className="mt-2">
+            <Badge tone={groqConnected ? "success" : "neutral"}>
+              {groqConnected ? "Connected" : "Offline"}
+            </Badge>
+          </p>
+        </Card>
       </div>
 
       {/* Main content */}
@@ -91,7 +124,7 @@ export default async function DashboardPage() {
         <Card>
           <h3 className="font-semibold">Coral centrality</h3>
           <p className="mt-2 text-sm leading-6 text-muted">The answer requires joining medicine rows, labs, chats, receipts, symptoms, appointments, OCR prescriptions, and family notes. That is why Coral is the real central query layer.</p>
-          <div className="mt-4 flex items-center gap-2 text-xs text-purple-600"><Brain className="h-3.5 w-3.5" /> Ollama AI available for analysis</div>
+          <div className="mt-4 flex items-center gap-2 text-xs text-purple-600"><Brain className="h-3.5 w-3.5" /> {ollamaConnected ? "Ollama AI available" : "AI providers"} for analysis</div>
         </Card>
       </div>
 
