@@ -5,7 +5,7 @@ import { CoralClient } from "@/lib/coral/client";
 import { QueryInput } from "@/components/query-input";
 import { PatientSelector } from "@/components/patient-selector";
 import { ModeBadge, Badge, Card, PageHeader, SafetyNotice } from "@/components/ui";
-import { Terminal, CheckCircle, Database, Brain, BarChart3 } from "lucide-react";
+import { Terminal, CheckCircle, Database, Brain, BarChart3, MessageSquare } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Dashboard — CareOps Agent",
@@ -128,10 +128,17 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      <Card>
-        <h3 className="text-lg font-semibold">Ask about a patient</h3>
-        <p className="mt-1 text-sm text-muted">Select a patient and ask a natural language question about their care records.</p>
-        <div className="mt-4">
+      <Card className="border-2 border-info/30 bg-gradient-to-br from-white to-blue-50/40 shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-info/10">
+            <MessageSquare className="h-5 w-5 text-info" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold">Ask about a patient</h3>
+            <p className="text-sm text-muted">Select a patient and ask a natural language question about their care records.</p>
+          </div>
+        </div>
+        <div className="mt-5">
           <PatientSelector patients={data.patients} />
         </div>
       </Card>
