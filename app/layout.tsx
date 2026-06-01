@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { BarChart3, ClipboardList, Database, FileText, Home, Info, Layers, Upload, UserRound, CalendarClock, Menu, X } from "lucide-react";
+import { BarChart3, ClipboardList, Database, FileText, Home, Info, Layers, Upload, UserRound, CalendarClock, Menu, X, GitBranch } from "lucide-react";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
@@ -18,6 +18,7 @@ export const viewport = {
 
 const nav = [
   { href: "/", label: "Dashboard", icon: Home },
+  { href: "/flow", label: "How It Works", icon: GitBranch },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/data-sources", label: "Data Sources", icon: Database },
   { href: "/data-import", label: "Import Data", icon: Upload },
